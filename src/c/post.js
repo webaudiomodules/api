@@ -1,0 +1,1 @@
+})(WAM.Synths.mySynthName);
