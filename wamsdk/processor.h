@@ -1,23 +1,17 @@
+// Web Audio Modules (WAMs)
+// WAM::Processor
 //
-//  processor.h
+// jari kleimola and oli larkin 2015-2017
+// jari@webaudiomodules.org
 //
-
-#ifndef __processor__
-#define __processor__
+#ifndef _WAM_processor_h_
+#define _WAM_processor_h_
 
 #include <emscripten.h>
 #include <stdint.h>
 
-// -- oli: since WebAudioAPI uses always 32bit floats, I'm not sure if
-// -- Processor class should be templated with the float definition. Plugin
-// -- developer can use doubles or floats in his code as he likes, so
-// -- maybe the template should be in a class which derives from Processor ?
-#ifdef F64
-typedef double tfloat;
-#else
-typedef float tfloat;
-#endif
-
+namespace WAM {
+		
 typedef unsigned char byte;
 typedef struct
 {
@@ -38,7 +32,7 @@ public:
 
 // -- audio and data streams
 public:
-	virtual void onProcess(AudioBus* audio, void* data) = 0;
+	virtual void onProcess(WAM::AudioBus* audio, void* data) = 0;
 	virtual void onMidi(byte status, byte data1, byte data2) {}
 	virtual void onSysex(byte* msg, uint32_t size) {}
 	virtual void onMessage(char* verb, char* res, double data) {}
@@ -56,6 +50,8 @@ protected:
 protected:
 	uint32_t m_bufsize;
 	uint32_t m_sr;
+	int m_inChannels;
+	int m_outChannels;
 };
 
 // for debugging
@@ -65,4 +61,5 @@ extern "C"
 	void wam_logi(int i);
 }
 
+} // namespace WAM
 #endif
