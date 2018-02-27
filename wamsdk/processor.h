@@ -37,6 +37,7 @@ public:
 	virtual void onSysex(byte* msg, uint32_t size) {}
 	virtual void onMessage(char* verb, char* res, double data) {}
 	virtual void onMessage(char* verb, char* res, char* data) {}
+	virtual void onMessage(char* verb, char* res, void* data, uint32_t size) {}  
 	virtual void onParam(uint32_t idparam, double value) {}	// todo: other datatypes
 	
 // -- patches

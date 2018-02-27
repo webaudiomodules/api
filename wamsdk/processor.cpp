@@ -27,6 +27,7 @@ extern "C"
 	EMSCRIPTEN_KEEPALIVE void wam_onpatch(Processor* proc, void* data, uint32_t size) { proc->onPatch(data, size); }
 	EMSCRIPTEN_KEEPALIVE void wam_onmessageN(Processor* proc, char* verb, char* res, double data) { proc->onMessage(verb, res, data); }
 	EMSCRIPTEN_KEEPALIVE void wam_onmessageS(Processor* proc, char* verb, char* res, char* data) { proc->onMessage(verb, res, data); }
+	EMSCRIPTEN_KEEPALIVE void wam_onmessageA(Processor* proc, char* verb, char* res, void* data, uint32_t size) { proc->onMessage(verb, res, data, size); }
 }
 
 // for debugging
