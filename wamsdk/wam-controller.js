@@ -6,6 +6,18 @@ class WAMController extends AudioWorkletNode
 {
   constructor(context, processorName, options) {
     super(context, processorName, options);
+    
+    var self = this;
+    this.port.onmessage = function (e) {
+      var msg = e.data;
+      try      { msg = JSON.parse(msg); }
+      catch(e) { }
+      if (msg) {
+        if (msg.type == "descriptor")
+          self.descriptor = msg.data;      
+        self.onmessage(msg);        
+      }
+    }
   }
   
   setParam(key,value) {
@@ -40,4 +52,6 @@ class WAMController extends AudioWorkletNode
   }
   
   get gui () { return null; }
+
+  onmessage (msg) { }
 }

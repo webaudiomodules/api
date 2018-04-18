@@ -78,7 +78,12 @@ class WAMProcessor extends AudioWorkletProcessor
     }
 
     this.port.onmessage = this.onmessage.bind(this);
-    this.port.start();    
+    this.port.start();
+    
+    if (desc && WAM.Pointer_stringify) {
+      var msg = '{ "type":"descriptor", "data":' + WAM.Pointer_stringify(desc) + ' }';
+      this.port.postMessage(msg);
+    }
   }
   
   onmessage (e) {
