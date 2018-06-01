@@ -29,7 +29,8 @@ class WAMProcessor extends AudioWorkletProcessor
     
     var WAM = options.mod;
     this.WAM = WAM;
-    
+    WAM.port = this.port;
+
     // -- construction C function wrappers
     var wam_ctor = WAM.cwrap("createModule", 'number', []);
     var wam_init = WAM.cwrap("wam_init", null, ['number','number','number','string']);

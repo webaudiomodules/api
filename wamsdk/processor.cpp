@@ -30,6 +30,30 @@ extern "C"
 	EMSCRIPTEN_KEEPALIVE void wam_onmessageA(Processor* proc, char* verb, char* res, void* data, uint32_t size) { proc->onMessage(verb, res, data, size); }
 }
 
+void Processor::postMessage(const char* verb, const char* prop, const char* data)
+{
+  EM_ASM({
+    var msg = {};
+    msg.verb  = Module.Pointer_stringify($0);
+    msg.prop  = Module.Pointer_stringify($1);
+    msg.data  = Module.Pointer_stringify($2);
+    Module.port.postMessage(msg);
+  }, verb, prop, data);
+}
+
+void Processor::postMessage(const char* verb, const char* prop, void* data, uint32_t length)
+{
+  EM_ASM({
+    var arr = new Uint8Array($3);
+    arr.set(Module.HEAP8.subarray($2,$2+$3));
+    var msg = {};
+    msg.verb  = Module.Pointer_stringify($0);
+    msg.prop  = Module.Pointer_stringify($1);
+    msg.data  = arr.buffer;
+    Module.port.postMessage(msg);
+  }, verb, prop, data, length);
+}
+
 // for debugging
 extern "C"
 {
