@@ -1,5 +1,5 @@
 ## Web Audio Modules API
-docs + tutorials + demos at http://webaudiomodules.org
+docs + tutorials + demos at https://webaudiomodules.org
 
 `master` branch tracks v0.2, targeting AudioWorklets
 
