@@ -137,14 +137,14 @@ class WAMProcessor extends AudioWorkletProcessor
     WAM._free(buf);
   }
 
-	onsysex (data) {
+  onsysex (data) {
     var WAM = this.WAM;
     var buf = WAM._malloc(data.length);
     for (var i = 0; i < data.length; i++)
       WAM.setValue(buf+i, data[i], 'i8');
-		this.wam_onsysex(this.inst, buf, data.length);
+    this.wam_onsysex(this.inst, buf, data.length);
     WAM._free(buf);
-	}
+  }
 
   process (inputs,outputs,params) {
     var WAM = this.WAM;
