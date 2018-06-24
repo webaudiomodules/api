@@ -47,7 +47,7 @@ public:
 // -- controller interface
 protected:
 	void postMessage(const char* verb, const char* prop, const char* data);
-	void postMessage(const char* verb, const char* prop, void* data, uint32_t length);
+	void postMessage(const char* verb, const char* prop, const void* data, uint32_t length);
 	
 protected:
 	uint32_t m_bufsize;

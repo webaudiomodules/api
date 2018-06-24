@@ -41,7 +41,7 @@ void Processor::postMessage(const char* verb, const char* prop, const char* data
   }, verb, prop, data);
 }
 
-void Processor::postMessage(const char* verb, const char* prop, void* data, uint32_t length)
+void Processor::postMessage(const char* verb, const char* prop, const void* data, uint32_t length)
 {
   EM_ASM({
     var arr = new Uint8Array($3);
