@@ -18,7 +18,7 @@ class WAMProcessor extends AudioWorkletProcessor
     if (options.numberOfInputs === undefined)       options.numberOfInputs = 0;
     if (options.numberOfOutputs === undefined)      options.numberOfOutputs = 1;
     if (options.inputChannelCount === undefined)    options.inputChannelCount  = [];
-    if (options.outputChannelCount === undefined)   options.outputChannelCount = [1];
+    if (options.outputChannelCount === undefined)   options.outputChannelCount = [2];
     if (options.inputChannelCount.length  != options.numberOfInputs)  throw new Error("InvalidArgumentException");
     if (options.outputChannelCount.length != options.numberOfOutputs) throw new Error("InvalidArgumentException");
 
@@ -70,7 +70,7 @@ class WAMProcessor extends AudioWorkletProcessor
       this.audiobufs[0].push(buf/4);
     }
     for (var i=0; i<this.numOutputs; i++) {
-      var numChannels = 2; // this.numOutChannels[i];
+      var numChannels = this.numOutChannels[i];
       for (var c=0; c<numChannels; c++) {
         var buf = WAM._malloc( this.bufsize*4 );
         WAM.setValue(obufs + (i*numChannels+c)*4, buf, 'i32');
@@ -137,14 +137,14 @@ class WAMProcessor extends AudioWorkletProcessor
     WAM._free(buf);
   }
 
-	onsysex (data) {
+  onsysex (data) {
     var WAM = this.WAM;
     var buf = WAM._malloc(data.length);
     for (var i = 0; i < data.length; i++)
       WAM.setValue(buf+i, data[i], 'i8');
-		this.wam_onsysex(this.inst, buf, data.length);
+    this.wam_onsysex(this.inst, buf, data.length);
     WAM._free(buf);
-	}
+  }
 
   process (inputs,outputs,params) {
     var WAM = this.WAM;
