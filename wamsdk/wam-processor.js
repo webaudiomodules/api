@@ -68,7 +68,7 @@ class WAMProcessor extends AudioWorkletProcessor
       var numChannels = this.numInChannels[i];
       for (var c=0; c<numChannels; c++) {
         var buf = WAM._malloc( this.bufsize*4 );
-        WAM.setValue(ibufs + i*numChannels*4, buf, 'i32');
+        WAM.setValue(ibufs + (i*numChannels+c)*4, buf, 'i32');
         this.audiobufs[0].push(buf/4);
       }
     }
