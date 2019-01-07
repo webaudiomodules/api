@@ -65,9 +65,12 @@ class WAMProcessor extends AudioWorkletProcessor
     WAM.setValue(this.audiobus+4, obufs, 'i32');
 
     for (var i=0; i<this.numInputs; i++) {
-      var buf = WAM._malloc( this.bufsize*4 );
-      WAM.setValue(ibufs + i*4, buf, 'i32');
-      this.audiobufs[0].push(buf/4);
+      var numChannels = this.numInChannels[i];
+      for (var c=0; c<numChannels; c++) {
+        var buf = WAM._malloc( this.bufsize*4 );
+        WAM.setValue(ibufs + (i*numChannels+c)*4, buf, 'i32');
+        this.audiobufs[0].push(buf/4);
+      }
     }
     for (var i=0; i<this.numOutputs; i++) {
       var numChannels = this.numOutChannels[i];
@@ -151,9 +154,12 @@ class WAMProcessor extends AudioWorkletProcessor
     
     // -- inputs
     for (var i=0; i<this.numInputs; i++) {
-      var waain = inputs[i][0];
-      var wamin = this.audiobufs[0][i];
-      WAM.HEAPF32.set(waain, wamin);
+      var numChannels = this.numInChannels[i];
+      for (var c=0; c<numChannels; c++) {
+        var waain = inputs[i][c];
+        var wamin = this.audiobufs[0][i*numChannels+c];
+        WAM.HEAPF32.set(waain, wamin);
+      }
     }
     
     this.wam_onprocess(this.inst, this.audiobus, 0);
