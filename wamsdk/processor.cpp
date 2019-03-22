@@ -34,9 +34,9 @@ void Processor::postMessage(const char* verb, const char* prop, const char* data
 {
   EM_ASM({
     var msg = {};
-    msg.verb = Module.Pointer_stringify($0);
-    msg.prop = Module.Pointer_stringify($1);
-    msg.data = Module.Pointer_stringify($2);
+    msg.verb = Module.UTF8ToString($0);
+    msg.prop = Module.UTF8ToString($1);
+    msg.data = Module.UTF8ToString($2);
     Module.port.postMessage(msg);
   }, verb, prop, data);
 }
@@ -47,8 +47,8 @@ void Processor::postMessage(const char* verb, const char* prop, const void* data
     var arr = new Uint8Array($3);
     arr.set(Module.HEAP8.subarray($2,$2+$3));
     var msg = {};
-    msg.verb = Module.Pointer_stringify($0);
-    msg.prop = Module.Pointer_stringify($1);
+    msg.verb = Module.UTF8ToString($0);
+    msg.prop = Module.UTF8ToString($1);
     msg.data = arr.buffer;
     Module.port.postMessage(msg);
   }, verb, prop, data, length);
@@ -57,6 +57,6 @@ void Processor::postMessage(const char* verb, const char* prop, const void* data
 // for debugging
 extern "C"
 {
-  void wam_logs(const char* s) { EM_ASM_INT(Module.print(Pointer_stringify($0)), s); }
+  void wam_logs(const char* s) { EM_ASM_INT(Module.print(UTF8ToString($0)), s); }
   void wam_logi(int i) { EM_ASM_INT(Module.print($0), i); }
 }
