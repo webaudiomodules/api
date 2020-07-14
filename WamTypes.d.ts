@@ -14,8 +14,7 @@ export interface WebAudioModule {
     /** The WAM Vendor's name */
     readonly vendor: string;
     /** Composed by vender + name */
-    readonly pluginId: string;
-    // RSH: rename to moduleId ?
+    readonly moduleId: string;
 
     /**
      * This async method must be redefined to get `AudioNode` that
@@ -43,7 +42,6 @@ export interface WebAudioModule {
      * Make sure this calls every internal destroys.
      */
     destroy(): void;
-    // RSH: We don't need loadGui
 }
 export const WebAudioModule: {
     prototype: WebAudioModule;
@@ -53,7 +51,6 @@ export const WebAudioModule: {
     guiModuleUrl: string;
     new (audioContext: BaseAudioContext): WebAudioModule;
 };
-
 export interface WamDescriptor {
     name: string;
     vendor: string;
@@ -62,46 +59,54 @@ export interface WamDescriptor {
     url?: string;
 }
 
-// PLUGIN
-export interface WamNode extends AudioWorkletNode {
+// Node
+
+export interface WamNodeOptions {
+    processorId: string;
+    instanceId: string;
+}
+export interface WamAudioWorkletCommon {
+    getParameterInfo(): WamParameterInfoMap;
+    getParameterInfo(parameterIdQuery: string): WamParameterInfoMap;
+    getParameterInfo(parameterIdQuery: string[]): WamParameterInfoMap;
+    getParameterValues(): WamParameterValueMap;
+    getParameterValues(normalized: boolean): WamParameterValueMap;
+    getParameterValues(normalized: boolean, parameterIdQuery: string): WamParameterValueMap;
+    getParameterValues(normalized: boolean, parameterIdQuery: string[]): WamParameterValueMap;
+    setParameterValues(parameterUpdates: WamParameterValueMap): void;
+    /** Compensation delay hint in samples */
+    getCompensationDelay(): number;
+    destroy(): void;
+}
+export interface WamNode extends AudioWorkletNode, WamAudioWorkletCommon {
     readonly processorId: string;
     readonly instanceId: string;
     readonly module: WebAudioModule;
-    getParameterInfo(parameterIdQuery?: string | string[]): Promise<WamParameterInfoMap>;
-    getParameterValues(normalized?: boolean, parameterIdQuery?: string | string[]): Promise<WamParameterValueMap>;
-    setParameterValues(parameterUpdates: WamParameterValueMap): Promise<void>;
     /** Returns a serializable that can be used to restore the WAM's state */
-    getState(): Promise<any>;
+    getState(): any;
     /** Use a serializable to restore the WAM's state */
-    setState(state: any): Promise<void>;
-    // RSH: why not put getState/setState in WebAudioModule interface?
-    /** Compensation delay hint in samples */
-    getCompensationDelay(): Promise<number>;
-    addEventCallback<E extends WamEventType>(subscriberId: E, callback: WamEventCallback<E>): boolean;
-    removeEventCallback(subscriberId: string): boolean;
-    onEvent(event: WamEvent): void;
-    onMessage(message: MessageEvent): void;
-    destroy(): void;
-    // RSH: Is it better to use EventTarget's methods? AudioNode already supports that.
+    setState(state: any): void;
+
+    addEventListener<K extends keyof AudioWorkletNodeEventMap>(type: K, listener: (this: WamNode, ev: AudioWorkletNodeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener<K extends keyof WamEventMap>(type: K, listener: (this: WamNode, ev: WamEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof AudioWorkletNodeEventMap>(type: K, listener: (this: WamNode, ev: AudioWorkletNodeEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener<K extends keyof WamEventMap>(type: K, listener: (this: WamNode, ev: WamEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 export const WamNode: {
     prototype: WamNode;
-    new (audioContext: BaseAudioContext, processorId: string, instanceId: string, module: WebAudioModule, options: AudioWorkletNodeOptions): WamNode;
-    // RSH: module already contains audioContext, processorId and instanceId
+    new (module: WebAudioModule, options?: AudioWorkletNodeOptions): WamNode;
 };
-
-export interface WamProcessor extends AudioWorkletProcessor {
+export interface WamProcessor extends AudioWorkletProcessor, WamAudioWorkletCommon {
     readonly processorId: string;
     readonly instanceId: string;
-    getCompensationDelay(): number;
     onEvent(event: WamEvent): void;
-    onMessage(message: MessageEvent): void;
-    destroy(): void;
 }
 export const WamProcessor: {
     prototype: WamProcessor;
     generateWamParameterInfo(): WamParameterInfoMap;
-    new (options: AudioWorkletNodeOptions): WamProcessor;
+    new (options: WamNodeOptions): WamProcessor;
 };
 
 // PARAMETERS
@@ -158,19 +163,19 @@ export type WamParameterValueMap = Record<string, WamParameterValue>;
 
 export type WamEventType = keyof WamEventMap; // TODO 'sysex', 'mpe', 'osc'
 
-interface WamEventBase<T extends WamEventType = WamEventType> {
+interface WamEventDetailBase<T extends WamEventType = WamEventType> {
     type: T;
     time?: number;
 }
 
-export type WamEvent = WamAutomationEvent | WamMidiEvent;
+export type WamEvent = CustomEvent<WamAutomationEventDetail | WamMidiEventDetail>;
 
-export interface WamAutomationEvent extends WamEventBase<"automation"> {
+export interface WamAutomationEventDetail extends WamEventDetailBase<"automation"> {
     parameterId: string;
     parameterValue: number;
 }
 
-export interface WamMidiEvent extends WamEventBase<"midi"> {
+export interface WamMidiEventDetail extends WamEventDetailBase<"midi"> {
     status: number;
     data1: number;
     data2: number;
@@ -179,39 +184,26 @@ export interface WamMidiEvent extends WamEventBase<"midi"> {
 export type WamEventCallback<E extends WamEventType = WamEventType> = (event: WamEventMap[E]) => any;
 
 export interface WamEventMap {
-    "midi": WamMidiEvent;
-    "automation": WamMidiEvent;
-    "sysex": WamEventBase;
-    "mpe": WamEventBase;
-    "osc": WamEventBase;
+    "midi": CustomEvent<WamMidiEventDetail>;
+    "automation": CustomEvent<WamMidiEventDetail>;
+    "sysex": CustomEvent<WamEventDetailBase>;
+    "mpe": CustomEvent<WamEventDetailBase>;
+    "osc": CustomEvent<WamEventDetailBase>;
 }
 
-// AudioWorkletProcessor
-
-export interface TypedAudioWorkletNodeOptions<T extends any = any> extends AudioWorkletNodeOptions {
-    processorOptions?: T;
-}
-export interface AudioWorkletMessageEvent<T extends any = any> extends MessageEvent {
-    data: T;
-}
-export interface AudioWorkletMessagePort<I extends Record<string, any> = Record<string, any>, O extends Record<string, any> = Record<string, any>> extends MessagePort {
-    onmessage: ((this: AudioWorkletMessagePort<I, O>, ev: AudioWorkletMessageEvent<I>) => any) | null;
-    onmessageerror: ((this: AudioWorkletMessagePort<I, O>, ev: AudioWorkletMessageEvent<I>) => any) | null;
-    postMessage(message: O, transfer: Transferable[]): void;
-    postMessage(message: O, options?: PostMessageOptions): void;
-}
-export interface TypedAudioParamDescriptor<P extends string = string> extends AudioParamDescriptor {
-    automationRate?: AutomationRate;
-    defaultValue?: number;
-    maxValue?: number;
-    minValue?: number;
-    name: P;
-}
-export interface AudioWorkletProcessor<I extends Record<string, any> = Record<string, any>, O extends Record<string, any> = Record<string, any>, P extends string = string> {
-    port: AudioWorkletMessagePort<I, O>;
-    process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<P, Float32Array>): boolean;
+export interface AudioWorkletProcessor {
+    port: MessagePort;
+    process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean;
 }
 export const AudioWorkletProcessor: {
-    parameterDescriptors(): TypedAudioParamDescriptor[];
-    new <I extends Record<string, any> = Record<string, any>, O extends Record<string, any> = Record<string, any>, P extends string = string, Opt extends any = any>(options: TypedAudioWorkletNodeOptions<Opt>): AudioWorkletProcessor<I, O, P>;
+    parameterDescriptors: AudioParamDescriptor[];
+    new (options: AudioWorkletNodeOptions): AudioWorkletProcessor;
 };
+
+export interface AudioWorkletGlobalScope {
+    registerProcessor: (name: string, constructor: new (options: any) => AudioWorkletProcessor) => void;
+    currentFrame: number;
+    currentTime: number;
+    sampleRate: number;
+    AudioWorkletProcessor: typeof AudioWorkletProcessor;
+}
