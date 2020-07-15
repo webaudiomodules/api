@@ -1,18 +1,28 @@
 /**
- * WebAudioModule v2 Parameter API,
+ * WebAudioModule v2 ParameterInfo API,
  * see d.ts file for more information.
  * @abstract
+ * @typedef {import('./WamTypes').WamParameterInfo} IWamParameterInfo
+ * @implements {IWamParameterInfo}
  */
-export default class WamParameter {
-	constructor(info) { throw new Error('Not Implemented.'); }
+export default class WamParameterInfo {
+	constructor(id, config) { throw new Error('Not Implemented.'); }
 
-	get id() { throw new Error('Not Implemented.'); }
+	get id() { throw new Error('Not Implemented.'); return null; }
 
-	get info() { throw new Error('Not Implemented.'); }
+    get label() { throw new Error('Not Implemented.'); return null; }
+    get type() { throw new Error('Not Implemented.'); return null; }
+    get defaultValue() { throw new Error('Not Implemented.'); return null; }
+    get minValue() { throw new Error('Not Implemented.'); return null; }
+    get maxValue() { throw new Error('Not Implemented.'); return null; }
+    get discreteStep() { throw new Error('Not Implemented.'); return null; }
+    get exponent() { throw new Error('Not Implemented.'); return null; }
+    get choices() { throw new Error('Not Implemented.'); return null; }
+    get units() { throw new Error('Not Implemented.'); return null; }
 
-	get value() { throw new Error('Not Implemented.'); }
-	set value(value) { throw new Error('Not Implemented.'); }
+	normalize(value) { throw new Error('Not Implemented.'); return null; }
 
-	get normalizedValue() { throw new Error('Not Implemented.'); }
-	set normalizedValue(normalizedValue) { throw new Error('Not Implemented.'); }
+	denormalize(value) { throw new Error('Not Implemented.'); return null; }
+
+	valueString(value) { throw new Error('Not Implemented.'); return null; }
 }

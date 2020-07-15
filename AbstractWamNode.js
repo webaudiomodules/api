@@ -2,38 +2,37 @@
  * WebAudioModule v2 Main AudioNode API,
  * can be used to build a CompositeNode, see d.ts file for more information.
  * @abstract
+ * @typedef {import('./WamTypes').WamNode} IWamNode
+ * @implements {IWamNode}
  */
 export default class WamNode extends AudioWorkletNode {
-	constructor(audioContext, processorId, instanceId, module, options) {
-		super(audioContext, processorId, options);
+	/**
+	 * @param {import('./WamTypes').WebAudioModule} module
+	 * @param {AudioWorkletNodeOptions} options
+	 * @memberof WamNode
+	 */
+	constructor(module, options) {
+		super(module.audioContext, module.processorId, options);
 		throw new Error('Not Implemented.');
 	}
 
-	get processorId() { throw new Error('Not Implemented.'); }
+	get processorId() { throw new Error('Not Implemented.'); return null; }
 
-	get instanceId() { throw new Error('Not Implemented.'); }
+	get instanceId() { throw new Error('Not Implemented.'); return null; }
 
-	get module() { throw new Error('Not Implemented.'); }
+	get module() { throw new Error('Not Implemented.'); return null; }
 
-	async getParameterInfo(parameterIdQuery) { throw new Error('Not Implemented.'); }
+	async getCompensationDelay() { throw new Error('Not Implemented.'); return null; }
 
-	async getParameterValues(normalized, parameterIdQuery) { throw new Error('Not Implemented.'); }
+	async getParameterInfo(parameterIdQuery) { throw new Error('Not Implemented.'); return null; }
 
-	async setParameterValues(parameterUpdates) { throw new Error('Not Implemented.'); }
+	async getParameterValues(normalized, parameterIdQuery) { throw new Error('Not Implemented.'); return null; }
 
-	async getState() { throw new Error('Not Implemented.'); }
+	async setParameterValues(parameterValues) { throw new Error('Not Implemented.'); }
+
+	async getState() { throw new Error('Not Implemented.'); return null; }
 
 	async setState(state) { throw new Error('Not Implemented.'); }
-
-	async getCompensationDelay() { throw new Error('Not Implemented.'); }
-
-	addEventCallback(subscriberId, callback) { throw new Error('Not Implemented.'); }
-
-	removeEventCallback(subscriberId) { throw new Error('Not Implemented.'); }
-
-	onEvent(event) { throw new Error('Not Implemented.'); }
-
-	onMessage(message) { throw new Error('Not Implemented.'); }
 
 	destroy() { throw new Error('Not Implemented.'); }
 }

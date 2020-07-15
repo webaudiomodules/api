@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export interface WebAudioModule {
     /** The `AudioContext` where the plugin's node lives in */
     audioContext: BaseAudioContext;
@@ -14,7 +15,7 @@ export interface WebAudioModule {
     /** The WAM Vendor's name */
     readonly vendor: string;
     /** Composed by vender + name */
-    readonly moduleId: string;
+    readonly processorId: string;
 
     /**
      * This async method must be redefined to get `AudioNode` that
@@ -66,26 +67,31 @@ export interface WamNodeOptions {
     instanceId: string;
 }
 export interface WamAudioWorkletCommon {
-    getParameterInfo(): WamParameterInfoMap;
-    getParameterInfo(parameterIdQuery: string): WamParameterInfoMap;
-    getParameterInfo(parameterIdQuery: string[]): WamParameterInfoMap;
-    getParameterValues(): WamParameterValueMap;
-    getParameterValues(normalized: boolean): WamParameterValueMap;
-    getParameterValues(normalized: boolean, parameterIdQuery: string): WamParameterValueMap;
-    getParameterValues(normalized: boolean, parameterIdQuery: string[]): WamParameterValueMap;
-    setParameterValues(parameterUpdates: WamParameterValueMap): void;
-    /** Compensation delay hint in samples */
-    getCompensationDelay(): number;
-    destroy(): void;
 }
 export interface WamNode extends AudioWorkletNode, WamAudioWorkletCommon {
     readonly processorId: string;
     readonly instanceId: string;
     readonly module: WebAudioModule;
+
+    /** Compensation delay hint in samples */
+    getCompensationDelay(): Promise<number>;
+
+    getParameterInfo(): Promise<WamParameterInfoMap>;
+    getParameterInfo(parameterIdQuery: string): Promise<WamParameterInfoMap>;
+    getParameterInfo(parameterIdQuery: string[]): Promise<WamParameterInfoMap>;
+
+    getParameterValues(): Promise<WamParameterValueMap>;
+    getParameterValues(normalized: boolean): Promise<WamParameterValueMap>;
+    getParameterValues(normalized: boolean, parameterIdQuery: string): Promise<WamParameterValueMap>;
+    getParameterValues(normalized: boolean, parameterIdQuery: string[]): Promise<WamParameterValueMap>;
+
+    setParameterValues(parameterValues: WamParameterValueMap): Promise<void>;
     /** Returns a serializable that can be used to restore the WAM's state */
     getState(): any;
     /** Use a serializable to restore the WAM's state */
     setState(state: any): void;
+
+    destroy(): void;
 
     addEventListener<K extends keyof AudioWorkletNodeEventMap>(type: K, listener: (this: WamNode, ev: AudioWorkletNodeEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     addEventListener<K extends keyof WamEventMap>(type: K, listener: (this: WamNode, ev: WamEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
@@ -101,6 +107,8 @@ export const WamNode: {
 export interface WamProcessor extends AudioWorkletProcessor, WamAudioWorkletCommon {
     readonly processorId: string;
     readonly instanceId: string;
+    /** Compensation delay hint in samples */
+    getCompensationDelay(): number;
     onEvent(event: WamEvent): void;
 }
 export const WamProcessor: {
@@ -111,7 +119,7 @@ export const WamProcessor: {
 
 // PARAMETERS
 
-export type WamParameterType = "float" | "int" | "boolean" | "choice";
+export type WamParameterType = 'float' | 'int' | 'boolean' | 'choice';
 
 export interface WamParameterConfiguration {
     label?: string;
@@ -170,12 +178,12 @@ interface WamEventDetailBase<T extends WamEventType = WamEventType> {
 
 export type WamEvent = CustomEvent<WamAutomationEventDetail | WamMidiEventDetail>;
 
-export interface WamAutomationEventDetail extends WamEventDetailBase<"automation"> {
+export interface WamAutomationEventDetail extends WamEventDetailBase<'automation'> {
     parameterId: string;
     parameterValue: number;
 }
 
-export interface WamMidiEventDetail extends WamEventDetailBase<"midi"> {
+export interface WamMidiEventDetail extends WamEventDetailBase<'midi'> {
     status: number;
     data1: number;
     data2: number;
@@ -184,11 +192,11 @@ export interface WamMidiEventDetail extends WamEventDetailBase<"midi"> {
 export type WamEventCallback<E extends WamEventType = WamEventType> = (event: WamEventMap[E]) => any;
 
 export interface WamEventMap {
-    "midi": CustomEvent<WamMidiEventDetail>;
-    "automation": CustomEvent<WamMidiEventDetail>;
-    "sysex": CustomEvent<WamEventDetailBase>;
-    "mpe": CustomEvent<WamEventDetailBase>;
-    "osc": CustomEvent<WamEventDetailBase>;
+    'midi': CustomEvent<WamMidiEventDetail>;
+    'automation': CustomEvent<WamMidiEventDetail>;
+    'sysex': CustomEvent<WamEventDetailBase>;
+    'mpe': CustomEvent<WamEventDetailBase>;
+    'osc': CustomEvent<WamEventDetailBase>;
 }
 
 export interface AudioWorkletProcessor {
