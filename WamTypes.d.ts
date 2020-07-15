@@ -145,10 +145,9 @@ export const WamParameterInfo: {
 };
 
 export interface WamParameter {
-    readonly id: string;
     readonly info: WamParameterInfo;
     value: number;
-    normalizedValue: boolean;
+    normalizedValue: number;
 }
 export const WamParameter: {
     prototype: WamParameter;

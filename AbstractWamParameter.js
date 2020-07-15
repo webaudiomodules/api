@@ -8,8 +8,6 @@
 export default class WamParameter {
 	constructor(info) { throw new Error('Not Implemented.'); }
 
-	get id() { throw new Error('Not Implemented.'); return null; }
-
 	get info() { throw new Error('Not Implemented.'); return null; }
 
 	get value() { throw new Error('Not Implemented.'); return null; }
