@@ -66,9 +66,7 @@ export interface WamNodeOptions {
     processorId: string;
     instanceId: string;
 }
-export interface WamAudioWorkletCommon {
-}
-export interface WamNode extends AudioWorkletNode, WamAudioWorkletCommon {
+export interface WamNode extends AudioWorkletNode {
     readonly processorId: string;
     readonly instanceId: string;
     readonly module: WebAudioModule;
@@ -104,7 +102,7 @@ export const WamNode: {
     prototype: WamNode;
     new (module: WebAudioModule, options?: AudioWorkletNodeOptions): WamNode;
 };
-export interface WamProcessor extends AudioWorkletProcessor, WamAudioWorkletCommon {
+export interface WamProcessor extends AudioWorkletProcessor {
     readonly processorId: string;
     readonly instanceId: string;
     /** Compensation delay hint in samples */
@@ -192,7 +190,7 @@ export type WamEventCallback<E extends WamEventType = WamEventType> = (event: Wa
 
 export interface WamEventMap {
     'midi': CustomEvent<WamMidiEventDetail>;
-    'automation': CustomEvent<WamMidiEventDetail>;
+    'automation': CustomEvent<WamAutomationEventDetail>;
     'sysex': CustomEvent<WamEventDetailBase>;
     'mpe': CustomEvent<WamEventDetailBase>;
     'osc': CustomEvent<WamEventDetailBase>;
