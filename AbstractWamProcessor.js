@@ -5,7 +5,7 @@ const AudioWorkletProcessor = globalThis.AudioWorkletProcessor;
  * WebAudioModule v2 Processor API,
  * used in the audio thread, see d.ts file for more information.
  * @abstract
- * @typedef {import('./WamTypes').WamProcessor} IWamProcessor
+ * @typedef {import('./types').WamProcessor} IWamProcessor
  * @implements {IWamProcessor}
  */
 export default class WamProcessor extends AudioWorkletProcessor {

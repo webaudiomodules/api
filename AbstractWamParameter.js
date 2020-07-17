@@ -2,7 +2,7 @@
  * WebAudioModule v2 Parameter API,
  * see d.ts file for more information.
  * @abstract
- * @typedef {import('./WamTypes').WamParameter} IWamParameter
+ * @typedef {import('./types').WamParameter} IWamParameter
  * @implements {IWamParameter}
  */
 export default class WamParameter {

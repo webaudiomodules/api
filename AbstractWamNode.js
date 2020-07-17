@@ -2,12 +2,12 @@
  * WebAudioModule v2 Main AudioNode API,
  * can be used to build a CompositeNode, see d.ts file for more information.
  * @abstract
- * @typedef {import('./WamTypes').WamNode} IWamNode
+ * @typedef {import('./types').WamNode} IWamNode
  * @implements {IWamNode}
  */
 export default class WamNode extends AudioWorkletNode {
 	/**
-	 * @param {import('./WamTypes').WebAudioModule} module
+	 * @param {import('./types').WebAudioModule} module
 	 * @param {AudioWorkletNodeOptions} options
 	 * @memberof WamNode
 	 */

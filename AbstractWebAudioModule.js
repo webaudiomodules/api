@@ -2,7 +2,7 @@
  * WebAudioModule v2 Main Class API,
  * see d.ts file for more information.
  * @abstract
- * @typedef {import('./WamTypes').WebAudioModule} IWebAudioModule
+ * @typedef {import('./types').WebAudioModule} IWebAudioModule
  * @implements {IWebAudioModule}
  */
 export default class WebAudioModule {

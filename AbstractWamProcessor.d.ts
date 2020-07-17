@@ -1,3 +1,3 @@
-import { WamProcessor } from './WamTypes';
+import { WamProcessor } from './types';
 
 export default WamProcessor;

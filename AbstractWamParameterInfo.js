@@ -2,7 +2,7 @@
  * WebAudioModule v2 ParameterInfo API,
  * see d.ts file for more information.
  * @abstract
- * @typedef {import('./WamTypes').WamParameterInfo} IWamParameterInfo
+ * @typedef {import('./types').WamParameterInfo} IWamParameterInfo
  * @implements {IWamParameterInfo}
  */
 export default class WamParameterInfo {

@@ -1,3 +1,3 @@
-import { WamParameter } from './WamTypes';
+import { WamParameter } from './types';
 
 export default WamParameter;
