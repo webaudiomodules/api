@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
-export interface WebAudioModule {
+export interface WebAudioModule<Node extends WamNode = WamNode> {
     /** The `AudioContext` where the plugin's node lives in */
     audioContext: BaseAudioContext;
     /** The `AudioNode` that handles audio in the plugin where the host can connect to/from */
-    audioNode: WamNode;
+    audioNode: Node;
     /** This will returns true after calling `initialize()`. */
     initialized: boolean;
     /** The unique identifier of the current WAM instance. */
@@ -22,7 +22,7 @@ export interface WebAudioModule {
      * will connected to the host.
      * It can be any object that extends `AudioNode` and implements `WamNode`
      */
-    createAudioNode(): Promise<WamNode>;
+    createAudioNode(initialState?: any): Promise<Node>;
     /**
      * The host will call this method to initialize the WAM with an initial state.
      *
@@ -50,7 +50,7 @@ export const WebAudioModule: {
     createInstance(audioContext: BaseAudioContext, initialState?: any): Promise<WebAudioModule>;
     descriptor: WamDescriptor;
     guiModuleUrl: string;
-    new (audioContext: BaseAudioContext): WebAudioModule;
+    new <Node extends WamNode = WamNode>(audioContext: BaseAudioContext): WebAudioModule<Node>;
 };
 export interface WamDescriptor {
     name: string;
