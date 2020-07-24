@@ -1,4 +1,4 @@
-/** @type {typeof import('./WamTypes').AudioWorkletProcessor} */
+/** @type {typeof import('./types').AudioWorkletProcessor} */
 const AudioWorkletProcessor = globalThis.AudioWorkletProcessor;
 
 /**
@@ -9,13 +9,15 @@ const AudioWorkletProcessor = globalThis.AudioWorkletProcessor;
  * @implements {IWamProcessor}
  */
 export default class WamProcessor extends AudioWorkletProcessor {
-	static generateWamParameterInfo() { throw new Error('Not Implemented.'); return null; }
-
-	get processorId() { throw new Error('Not Implemented.'); return null; }
+	get moduleId() { throw new Error('Not Implemented.'); return null; }
 
 	get instanceId() { throw new Error('Not Implemented.'); return null; }
 
 	getCompensationDelay() { throw new Error('Not Implemented.'); return null; }
 
-	onEvent(event) { throw new Error('Not Implemented.'); }
+	scheduleEvent(event) { throw new Error('Not Implemented.'); }
+
+	clearEvents() { throw new Error('Not Implemented.'); }
+
+	destroy() { throw new Error('Not Implemented.'); }
 }

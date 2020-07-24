@@ -34,7 +34,7 @@ export default class WebAudioModule {
 
 	get vendor() { throw new Error('Not Implemented.'); return null; }
 
-	get processorId() { throw new Error('Not Implemented.'); return null; }
+	get moduleId() { throw new Error('Not Implemented.'); return null; }
 
 	async initialize() { throw new Error('Not Implemented.'); return null; }
 

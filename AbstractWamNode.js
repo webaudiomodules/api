@@ -6,13 +6,15 @@
  * @implements {IWamNode}
  */
 export default class WamNode extends AudioWorkletNode {
+	static generateWamParameters() { throw new Error('Not Implemented.'); return null; }
+
 	/**
 	 * @param {import('./types').WebAudioModule} module
 	 * @param {AudioWorkletNodeOptions} options
 	 * @memberof WamNode
 	 */
 	constructor(module, options) {
-		super(module.audioContext, module.processorId, options);
+		super(module.audioContext, module.moduleId, options);
 		throw new Error('Not Implemented.');
 	}
 
@@ -33,6 +35,10 @@ export default class WamNode extends AudioWorkletNode {
 	async getState() { throw new Error('Not Implemented.'); return null; }
 
 	async setState(state) { throw new Error('Not Implemented.'); }
+
+	scheduleEvent(event) { throw new Error('Not Implemented.'); }
+
+	async clearEvents() { throw new Error('Not Implemented.'); }
 
 	destroy() { throw new Error('Not Implemented.'); }
 }
