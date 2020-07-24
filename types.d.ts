@@ -22,7 +22,7 @@ export interface WebAudioModule<Node extends WamNode = WamNode> {
      * will connected to the host.
      * It can be any object that extends `AudioNode` and implements `WamNode`
      */
-    createAudioNode(): Promise<WamNode>;
+    createAudioNode(initialState?: any): Promise<WamNode>;
     /**
      * The host will call this method to initialize the WAM with an initial state.
      *
@@ -38,12 +38,6 @@ export interface WebAudioModule<Node extends WamNode = WamNode> {
     initialize(state?: any): Promise<WebAudioModule>;
     /** Redefine this method to get the WAM's GUI as an HTML `Element`. */
     createGui(): Promise<Element>;
-    /**
-     * The host will call this method when destroy the WAM.
-     * Make sure this calls every internal destroys.
-     */
-    destroy(): void;
-    // OGC Do we need destroy method here as well?
 }
 export const WebAudioModule: {
     prototype: WebAudioModule;
