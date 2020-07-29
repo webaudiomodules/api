@@ -3,7 +3,7 @@ export interface WebAudioModule<Node extends WamNode = WamNode> {
     /** The `AudioContext` where the plugin's node lives */
     audioContext: BaseAudioContext;
     /** The `AudioNode` that handles audio in the plugin where the host can connect to/from */
-    audioNode: WamNode;
+    audioNode: Node;
     /** This will return true after calling `initialize()`. */
     initialized: boolean;
     /** The identifier of the current WAM, composed of vender + name */
