@@ -44,15 +44,11 @@ export const WebAudioModule: {
     isWebAudioModule: boolean;
     createInstance(audioContext: BaseAudioContext, initialState?: any): Promise<WebAudioModule>;
     descriptor: WamDescriptor;
-    guiModuleUrl: string;
     new <Node extends WamNode = WamNode>(audioContext: BaseAudioContext): WebAudioModule<Node>;
 };
 export interface WamDescriptor {
     name: string;
     vendor: string;
-    entry?: string;
-    gui: string;
-    url?: string;
 }
 
 // Node

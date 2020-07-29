@@ -10,8 +10,6 @@ export default class WebAudioModule {
 
 	static get descriptor() { throw new Error('Not Implemented.'); return null; }
 
-	static get guiModuleUrl() { throw new Error('Not Implemented.'); return null; }
-
 	static async createInstance(audioContext, initialState) { throw new Error('Not Implemented.'); return null; }
 
 	constructor(audioContext) { throw new Error('Not Implemented.'); return null; }
