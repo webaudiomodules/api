@@ -57,7 +57,7 @@ export interface WamNodeOptions {
     processorId: string;
     instanceId: string;
 }
-export interface WamNode extends AudioWorkletNode {
+export interface WamNode extends AudioNode {
     readonly processorId: string;
     readonly instanceId: string;
     readonly module: WebAudioModule;
