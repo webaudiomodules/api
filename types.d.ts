@@ -63,14 +63,9 @@ export interface WamNode extends AudioNode {
     readonly module: WebAudioModule;
 
     /** Get parameter info for the specified parameter ids, or omit argument to get info for all parameters. */
-    getParameterInfo(): Promise<WamParameterInfoMap>;
-    getParameterInfo(parameterIdQuery: string): Promise<WamParameterInfoMap>;
-    getParameterInfo(parameterIdQuery: string[]): Promise<WamParameterInfoMap>;
+    getParameterInfo(parameterIdQuery?: string | string[]): Promise<WamParameterInfoMap>;
     /** Get parameter values for the specified parameter ids, or omit argument to get values for all parameters. */
-    getParameterValues(): Promise<WamParameterDataMap>;
-    getParameterValues(normalized: boolean): Promise<WamParameterDataMap>;
-    getParameterValues(normalized: boolean, parameterIdQuery: string): Promise<WamParameterDataMap>;
-    getParameterValues(normalized: boolean, parameterIdQuery: string[]): Promise<WamParameterDataMap>;
+    getParameterValues(normalized?: boolean, parameterIdQuery?: string | string[]): Promise<WamParameterDataMap>;
     /** Set parameter values for the specified parameter ids. */
     setParameterValues(parameterValues: WamParameterDataMap): Promise<void>;
     /** Returns an object (such as JSON or a serialized blob) that can be used to restore the WAM's state. */
@@ -229,4 +224,5 @@ export interface AudioWorkletGlobalScope {
     currentTime: number;
     sampleRate: number;
     AudioWorkletProcessor: typeof AudioWorkletProcessor;
+	WamProcessors: Record<string, WamProcessor>;
 }
