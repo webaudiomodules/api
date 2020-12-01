@@ -49,6 +49,11 @@ export const WebAudioModule: {
 export interface WamDescriptor {
     name: string;
     vendor: string;
+    version: string;
+    sdkVersion: string;
+    thumbnail: string;
+    keywords: string[];
+    isInstrument: boolean;
 }
 
 // Node
