@@ -54,6 +54,8 @@ export interface WamDescriptor {
     thumbnail: string;
     keywords: string[];
     isInstrument: boolean;
+    description: string;
+    website: string;
 }
 
 // Node
