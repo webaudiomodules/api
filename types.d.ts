@@ -1,6 +1,14 @@
 /* eslint-disable max-len */
+/**
+ * Main `WebAudioModule` interface,
+ * its constructor should be the `export default` of the ESM of each WAM.
+ * 
+ * @template Node type of the `audioNode` property, could be any `AudioNode` that implements `WamNode`
+ */
 export interface WebAudioModule<Node extends WamNode = WamNode> {
-    /** The `AudioContext` where the plugin's node lives */
+    /** should return `true` */
+    readonly isWebAudioModule: boolean;
+    /** The `AudioContext` where the plugin's node lives in */
     audioContext: BaseAudioContext;
     /** The `AudioNode` that handles audio in the plugin where the host can connect to/from */
     audioNode: Node;
@@ -41,9 +49,11 @@ export interface WebAudioModule<Node extends WamNode = WamNode> {
 }
 export const WebAudioModule: {
     prototype: WebAudioModule;
-    isWebAudioModule: boolean;
+    /** should return `true` */
+    isWebAudioModuleConstructor: boolean;
+    /** shorthand for `new` then `initialize`. */
     createInstance(audioContext: BaseAudioContext, initialState?: any): Promise<WebAudioModule>;
-    descriptor: WamDescriptor;
+    /** WAM constructor, should call `initialize` after constructor to get it work */
     new <Node extends WamNode = WamNode>(audioContext: BaseAudioContext): WebAudioModule<Node>;
 };
 export interface WamDescriptor {
@@ -61,12 +71,13 @@ export interface WamDescriptor {
 // Node
 
 export interface WamNodeOptions {
+    /** The identifier of the WAM `AudioWorkletProcessor`. */
     processorId: string;
+    /** The unique identifier of the current WAM instance. */
     instanceId: string;
 }
-export interface WamNode extends AudioNode {
-    readonly processorId: string;
-    readonly instanceId: string;
+export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
+    /** Current `WebAudioModule`. */
     readonly module: WebAudioModule;
 
     /** Get parameter info for the specified parameter ids, or omit argument to get info for all parameters. */
