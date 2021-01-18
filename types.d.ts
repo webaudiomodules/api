@@ -101,7 +101,7 @@ export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
     removeEventListener<K extends keyof WamEventMap>(type: K, listener: (this: WamNode, ev: CustomEvent<WamEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
     removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     /** From the main thread, schedule a WamEvent. Listeners will be triggered when the event is processed. */
-    scheduleEvent(event: WamEvent): void;
+    scheduleEvent(...event: WamEvent[]): void;
     /** From the main thread, clear all pending WamEvents. */
     clearEvents(): Promise<void>;
     /** Stop processing and remove the node from the graph. */
@@ -117,7 +117,7 @@ export interface WamProcessor extends AudioWorkletProcessor {
     /** Compensation delay hint in seconds. */
     getCompensationDelay(): number;
     /** From the audio thread, schedule a WamEvent. Listeners will be triggered when the event is processed. */
-    scheduleEvent(event: WamEvent): void;
+    scheduleEvent(...event: WamEvent[]): void;
     /** From the audio thread, clear all pending WamEvents. */
     clearEvents(): void;
     /** Stop processing and remove the node from the graph. */
