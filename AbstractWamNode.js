@@ -21,9 +21,9 @@ export default class WamNode extends AudioWorkletNode {
 
 	async getCompensationDelay() { throw new Error('Not Implemented.'); return null; }
 
-	async getParameterInfo(parameterIdQuery) { throw new Error('Not Implemented.'); return null; }
+	async getParameterInfo(...parameterIdQuery) { throw new Error('Not Implemented.'); return null; }
 
-	async getParameterValues(normalized, parameterIdQuery) { throw new Error('Not Implemented.'); return null; }
+	async getParameterValues(normalized, ...parameterIdQuery) { throw new Error('Not Implemented.'); return null; }
 
 	async setParameterValues(parameterValues) { throw new Error('Not Implemented.'); }
 
