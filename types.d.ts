@@ -56,7 +56,10 @@ export const WebAudioModule: {
     /** WAM constructor, should call `initialize` after constructor to get it work */
     new <Node extends WamNode = WamNode>(audioContext: BaseAudioContext): WebAudioModule<Node>;
 };
-export interface WamDescriptor {
+
+export type WamIODescriptor = Record<`has${'Audio' | 'Midi' | 'Sysex' | 'Osc' | 'Mpe' | 'Automation'}${'Input' | 'Output'}`, boolean>;
+
+export interface WamDescriptor extends WamIODescriptor {
     name: string;
     vendor: string;
     version: string;
@@ -118,6 +121,7 @@ export interface WamProcessor extends AudioWorkletProcessor {
     getCompensationDelay(): number;
     /** From the audio thread, schedule a WamEvent. Listeners will be triggered when the event is processed. */
     scheduleEvents(...event: WamEvent[]): void;
+    emitEvents(...events: WamEvent[]): void;
     /** From the audio thread, clear all pending WamEvents. */
     clearEvents(): void;
     /** Stop processing and remove the node from the graph. */
@@ -236,11 +240,22 @@ export const AudioWorkletProcessor: {
     new (options: AudioWorkletNodeOptions): AudioWorkletProcessor;
 };
 
+export interface WamEnv {
+    readonly graph: Map<WamProcessor, Set<WamProcessor>[]>;
+    readonly processors: Record<string, WamProcessor>;
+    create(wam: WamProcessor): void;
+    connectEvents(from: WamProcessor, output: number, to: WamProcessor): void;
+    disconnectEvents(from: WamProcessor, output: number, to: WamProcessor): void;
+    destroy(wam: WamProcessor): void;
+}
+
 export interface AudioWorkletGlobalScope {
     registerProcessor: (name: string, constructor: new (options: any) => AudioWorkletProcessor) => void;
     currentFrame: number;
     currentTime: number;
     sampleRate: number;
     AudioWorkletProcessor: typeof AudioWorkletProcessor;
-	WamProcessors: Record<string, WamProcessor>;
+	/** @deprecated */
+    WamProcessors: Record<string, WamProcessor>;
+    webAudioModules: WamEnv;
 }
