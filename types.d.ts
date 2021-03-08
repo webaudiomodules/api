@@ -247,6 +247,7 @@ export interface WamEnv {
     connectEvents(from: WamProcessor, output: number, to: WamProcessor): void;
     disconnectEvents(from: WamProcessor, output: number, to: WamProcessor): void;
     destroy(wam: WamProcessor): void;
+    getTimeInfo(from?: number, to?: number): any;
 }
 
 export interface AudioWorkletGlobalScope {
