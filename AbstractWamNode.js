@@ -34,5 +34,9 @@ export default class WamNode extends AudioWorkletNode {
 
 	async clearEvents() { throw new Error('Not Implemented.'); }
 
+	connectEvents(to, output) { throw new Error('Not Implemented.'); }
+
+	disconnectEvents(to, output) { throw new Error('Not Implemented.'); }
+
 	destroy() { throw new Error('Not Implemented.'); }
 }

@@ -107,6 +107,8 @@ export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
     scheduleEvents(...event: WamEvent[]): void;
     /** From the main thread, clear all pending WamEvents. */
     clearEvents(): void;
+    connectEvents(to: WamNode, output?: number): void;
+    disconnectEvents(to?: WamNode, output?: number): void;
     /** Stop processing and remove the node from the graph. */
     destroy(): void;
 }
@@ -243,10 +245,10 @@ export const AudioWorkletProcessor: {
 
 export interface WamEnv {
     readonly graph: Map<WamProcessor, Set<WamProcessor>[]>;
-    readonly processors: Set<WamProcessor>;
+    readonly processors: Record<string, WamProcessor>;
     create(wam: WamProcessor): void;
-    connectEvents(from: WamProcessor, output: number, to: WamProcessor): void;
-    disconnectEvents(from: WamProcessor, output: number, to: WamProcessor): void;
+    connectEvents(from: WamProcessor, to: WamProcessor, output?: number): void;
+    disconnectEvents(from: WamProcessor, to?: WamProcessor, output?: number): void;
     destroy(wam: WamProcessor): void;
     getTimeInfo(from?: number, to?: number): any;
 }
