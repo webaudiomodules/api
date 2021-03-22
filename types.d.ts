@@ -121,6 +121,7 @@ export interface WamProcessor extends AudioWorkletProcessor {
     getCompensationDelay(): number;
     /** From the audio thread, schedule a WamEvent. Listeners will be triggered when the event is processed. */
     scheduleEvents(...event: WamEvent[]): void;
+    /** Schedule events for all the downstream WAMs */
     emitEvents(...events: WamEvent[]): void;
     /** From the audio thread, clear all pending WamEvents. */
     clearEvents(): void;
@@ -242,7 +243,7 @@ export const AudioWorkletProcessor: {
 
 export interface WamEnv {
     readonly graph: Map<WamProcessor, Set<WamProcessor>[]>;
-    readonly processors: Record<string, WamProcessor>;
+    readonly processors: Set<WamProcessor>;
     create(wam: WamProcessor): void;
     connectEvents(from: WamProcessor, output: number, to: WamProcessor): void;
     disconnectEvents(from: WamProcessor, output: number, to: WamProcessor): void;
