@@ -199,7 +199,7 @@ export type WamParameterDataMap = Record<string, WamParameterData>;
 
 // EVENTS
 
-export type WamListenerType = 'wam-event' | 'wam-automation' | 'wam-midi' | 'wam-sysex' | 'wam-mpe' | 'wam-osc';
+export type WamListenerType = 'wam-event' | 'wam-automation' | 'wam-midi' | 'wam-sysex' | 'wam-mpe' | 'wam-osc' | 'wam-transport';
 
 export type WamEventType = keyof WamEventMap;
 
@@ -217,6 +217,14 @@ export interface WamSysexData {
     bytes: number[];
 }
 
+export interface WamTransportData {
+    currentBar: number; // bar number
+    currentBarStarted: number; // timestamp in seconds (WebAudio clock)
+    tempo: number;
+    timeSigNumerator: number;
+    timeSigDenominator: number;
+}
+
 export type WamEventCallback<E extends WamEventType = WamEventType> = (event: WamEventMap[E]) => any;
 
 export interface WamEventMap {
@@ -225,6 +233,7 @@ export interface WamEventMap {
     "sysex": WamSysexEvent;
     "mpe": WamMpeEvent;
     "osc": WamOscEvent;
+    "transport": WamTransportEvent;
 }
 
 export type WamEvent = WamAutomationEvent | WamMidiEvent | WamSysexEvent | WamMpeEvent | WamOscEvent;
@@ -233,6 +242,7 @@ export type WamMidiEvent = WamEventBase<'midi', WamMidiData>;
 export type WamSysexEvent = WamEventBase<'sysex', WamSysexData>;
 export type WamMpeEvent = WamEventBase<'mpe', WamMidiData>;
 export type WamOscEvent = WamEventBase<'osc', string>;
+export type WamTransportEvent = WamEventBase<'transport', WamTransportData>;
 
 export interface AudioWorkletProcessor {
     port: MessagePort;
@@ -250,7 +260,6 @@ export interface WamEnv {
     connectEvents(from: WamProcessor, to: WamProcessor, output?: number): void;
     disconnectEvents(from: WamProcessor, to?: WamProcessor, output?: number): void;
     destroy(wam: WamProcessor): void;
-    getTimeInfo(from?: number, to?: number): any;
 }
 
 export interface AudioWorkletGlobalScope {
