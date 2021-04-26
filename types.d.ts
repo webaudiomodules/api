@@ -254,7 +254,7 @@ export const AudioWorkletProcessor: {
 };
 
 export interface WamEnv {
-    readonly graph: Map<WamProcessor, Set<WamProcessor>[]>;
+    readonly eventGraph: Map<WamProcessor, Set<WamProcessor>[]>;
     readonly processors: Record<string, WamProcessor>;
     create(wam: WamProcessor): void;
     connectEvents(from: WamProcessor, to: WamProcessor, output?: number): void;
