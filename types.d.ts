@@ -268,7 +268,5 @@ export interface AudioWorkletGlobalScope {
     currentTime: number;
     sampleRate: number;
     AudioWorkletProcessor: typeof AudioWorkletProcessor;
-	/** @deprecated */
-    WamProcessors: Record<string, WamProcessor>;
     webAudioModules: WamEnv;
 }

@@ -18,6 +18,4 @@ export default class WamEnv {
 	disconnectEvents(from, output, to) { throw new Error('Not Implemented.'); return null; }
 
 	destroy(wam) { throw new Error('Not Implemented.'); return null; }
-
-	getTimeInfo(from, to) { throw new Error('Not Implemented.'); return null; }
 }
