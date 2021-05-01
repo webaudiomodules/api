@@ -199,7 +199,7 @@ export type WamParameterDataMap = Record<string, WamParameterData>;
 
 // EVENTS
 
-export type WamListenerType = 'wam-event' | 'wam-automation' | 'wam-midi' | 'wam-sysex' | 'wam-mpe' | 'wam-osc' | 'wam-transport';
+export type WamListenerType = 'wam-event' | 'wam-automation' | 'wam-transport' | 'wam-midi' | 'wam-sysex' | 'wam-mpe' | 'wam-osc';
 
 export type WamEventType = keyof WamEventMap;
 
@@ -207,14 +207,6 @@ export interface WamEventBase<T extends WamEventType = WamEventType, D = any> {
     type: T;
     data: D;
     time?: number;
-}
-
-export interface WamMidiData {
-    bytes: [number, number, number];
-}
-
-export interface WamSysexData {
-    bytes: number[];
 }
 
 export interface WamTransportData {
@@ -225,24 +217,32 @@ export interface WamTransportData {
     timeSigDenominator: number;
 }
 
+export interface WamMidiData {
+    bytes: [number, number, number];
+}
+
+export interface WamSysexData {
+    bytes: number[];
+}
+
 export type WamEventCallback<E extends WamEventType = WamEventType> = (event: WamEventMap[E]) => any;
 
 export interface WamEventMap {
     "automation": WamAutomationEvent;
+    "transport": WamTransportEvent;
     "midi": WamMidiEvent;
     "sysex": WamSysexEvent;
     "mpe": WamMpeEvent;
     "osc": WamOscEvent;
-    "transport": WamTransportEvent;
 }
 
-export type WamEvent = WamAutomationEvent | WamMidiEvent | WamSysexEvent | WamMpeEvent | WamOscEvent;
+export type WamEvent = WamAutomationEvent | WamTransportEvent | WamMidiEvent | WamSysexEvent | WamMpeEvent | WamOscEvent;
 export type WamAutomationEvent = WamEventBase<'automation', WamParameterData>;
+export type WamTransportEvent = WamEventBase<'transport', WamTransportData>;
 export type WamMidiEvent = WamEventBase<'midi', WamMidiData>;
 export type WamSysexEvent = WamEventBase<'sysex', WamSysexData>;
 export type WamMpeEvent = WamEventBase<'mpe', WamMidiData>;
 export type WamOscEvent = WamEventBase<'osc', string>;
-export type WamTransportEvent = WamEventBase<'transport', WamTransportData>;
 
 export interface AudioWorkletProcessor {
     port: MessagePort;
