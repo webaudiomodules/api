@@ -2,7 +2,7 @@
 /**
  * Main `WebAudioModule` interface,
  * its constructor should be the `export default` of the ESM of each WAM.
- * 
+ *
  * @template Node type of the `audioNode` property, could be any `AudioNode` that implements `WamNode`
  */
 export interface WebAudioModule<Node extends WamNode = WamNode> {
@@ -107,7 +107,9 @@ export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
     scheduleEvents(...event: WamEvent[]): void;
     /** From the main thread, clear all pending WamEvents. */
     clearEvents(): void;
+    /** Connect an event output stream to another WAM. If no output index is given, assume output 0. */
     connectEvents(to: WamNode, output?: number): void;
+    /** Disconnect an event output stream from another WAM. If no arguments are given, all event streams will be disconnected. */
     disconnectEvents(to?: WamNode, output?: number): void;
     /** Stop processing and remove the node from the graph. */
     destroy(): void;
