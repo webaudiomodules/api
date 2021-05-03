@@ -42,4 +42,6 @@ export default class WebAudioModule {
 	async createAudioNode(initialState) { throw new Error('Not Implemented.'); return null; }
 
 	async createGui() { throw new Error('Not Implemented.'); return null; }
+
+	destroyGui(gui) { throw new Error('Not Implemented.'); }
 }

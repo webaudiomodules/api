@@ -46,6 +46,8 @@ export interface WebAudioModule<Node extends WamNode = WamNode> {
     initialize(state?: any): Promise<WebAudioModule>;
     /** Redefine this method to get the WAM's GUI as an HTML `Element`. */
     createGui(): Promise<Element>;
+    /** Clean up an element previously returned by `createGui` */
+    destroyGui(gui: Element): void
 }
 export const WebAudioModule: {
     prototype: WebAudioModule;
