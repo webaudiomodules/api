@@ -214,10 +214,15 @@ export interface WamEventBase<T extends WamEventType = WamEventType, D = any> {
 }
 
 export interface WamTransportData {
-    currentBar: number; // bar number
-    currentBarStarted: number; // timestamp in seconds (WebAudio clock)
+    /** Bar number */
+    currentBar: number;
+    /** Timestamp in seconds (WebAudio clock) */
+    currentBarStarted: number;
+    /** Beats per Minute */
     tempo: number;
+    /** Beats count per Bar */
     timeSigNumerator: number;
+    /** Beat duration indicator */
     timeSigDenominator: number;
 }
 
@@ -258,11 +263,17 @@ export const AudioWorkletProcessor: {
 };
 
 export interface WamEnv {
+    /** Stores a graph of WamProcessors connected with `connectEvents` for each output of processors */
     readonly eventGraph: Map<WamProcessor, Set<WamProcessor>[]>;
+    /** processors map with `instanceId` */
     readonly processors: Record<string, WamProcessor>;
+    /** The method should be called when a processor instance is created */
     create(wam: WamProcessor): void;
+    /** Connect events between `WamProcessor`s, the output number is 0 by default */
     connectEvents(from: WamProcessor, to: WamProcessor, output?: number): void;
+    /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `to` is omitted, will disconnect every connections */
     disconnectEvents(from: WamProcessor, to?: WamProcessor, output?: number): void;
+    /** The method should be called when a processor instance is destroyed */
     destroy(wam: WamProcessor): void;
 }
 
@@ -272,18 +283,37 @@ export type TypedArrayConstructor = Int8ArrayConstructor | Uint8ArrayConstructor
 
 export type TypedArray = Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array | Float64Array | BigInt64Array | BigInt64Array;
 
+/**
+ * A Single Producer - Single Consumer thread-safe wait-free ring buffer.
+ * The producer and the consumer can be on separate threads, but cannot change roles,
+ * except with external synchronization.
+ *
+ * @author padenot
+ */
 export interface RingBuffer<T extends TypedArray> {
-    type(): string;
+    /** Returns the type of the underlying ArrayBuffer for this RingBuffer. This allows implementing crude type checking. */
+    readonly type: string;
+    /** Push bytes to the ring buffer. `bytes` is a typed array of the same type as passed in the ctor, to be written to the queue. Returns the number of elements written to the queue. */
     push(elements: T): number;
+    /** Read `elements.length` elements from the ring buffer. `elements` is a typed array of the same type as passed in the ctor. Returns the number of elements read from the queue, they are placed at the beginning of the array passed as parameter. */
     pop(elements: T): number;
-    empty(): boolean;
-    full(): boolean;
-    getCapacity(): number;
-    availableRead(): number;
-    availableWrite(): number;
+    /** True if the ring buffer is empty false otherwise. This can be late on the reader side: it can return true even if something has just been pushed. */
+    readonly empty: boolean;
+    /** True if the ring buffer is full, false otherwise. This can be late on the write side: it can return true when something has just been popped. */
+    readonly full: boolean;
+    /** The usable capacity for the ring buffer: the number of elements that can be stored. */
+    readonly capacity: number;
+    /** Number of elements available for reading. This can be late, and report less elements that is actually in the queue, when something has just been enqueued. */
+    readonly availableRead: number;
+    /** Number of elements available for writing. This can be late, and report less elements that is actually available for writing, when something has just been dequeued. */
+    readonly availableWrite: number;
 }
 export const RingBuffer: {
     getStorageForCapacity(capacity: number, Type: TypedArrayConstructor): SharedArrayBuffer;
+    /**
+     * `sab` is a SharedArrayBuffer with a capacity calculated by calling
+     * `getStorageForCapacity` with the desired capacity.
+     */
     new <T extends TypedArrayConstructor>(sab: SharedArrayBuffer, Type: T): RingBuffer<InstanceType<T>>;
 };
 
