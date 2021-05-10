@@ -266,6 +266,27 @@ export interface WamEnv {
     destroy(wam: WamProcessor): void;
 }
 
+// RingBuffer
+
+export type TypedArrayConstructor = Int8ArrayConstructor | Uint8ArrayConstructor | Uint8ClampedArrayConstructor | Int16ArrayConstructor | Uint16ArrayConstructor | Int32ArrayConstructor | Uint32ArrayConstructor | Float32ArrayConstructor | Float64ArrayConstructor | BigInt64ArrayConstructor | BigInt64ArrayConstructor;
+
+export type TypedArray = Int8Array | Uint8Array | Uint8ClampedArray | Int16Array | Uint16Array | Int32Array | Uint32Array | Float32Array | Float64Array | BigInt64Array | BigInt64Array;
+
+export interface RingBuffer<T extends TypedArray> {
+    type(): string;
+    push(elements: T): number;
+    pop(elements: T): number;
+    empty(): boolean;
+    full(): boolean;
+    getCapacity(): number;
+    availableRead(): number;
+    availableWrite(): number;
+}
+export const RingBuffer: {
+    getStorageForCapacity(capacity: number, Type: TypedArrayConstructor): SharedArrayBuffer;
+    new <T extends TypedArrayConstructor>(sab: SharedArrayBuffer, Type: T): RingBuffer<InstanceType<T>>;
+};
+
 export interface AudioWorkletGlobalScope {
     registerProcessor: (name: string, constructor: new (options: any) => AudioWorkletProcessor) => void;
     currentFrame: number;
@@ -273,4 +294,5 @@ export interface AudioWorkletGlobalScope {
     sampleRate: number;
     AudioWorkletProcessor: typeof AudioWorkletProcessor;
     webAudioModules: WamEnv;
+    RingBuffer: typeof RingBuffer;
 }
