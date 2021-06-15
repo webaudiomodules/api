@@ -290,13 +290,13 @@ export type TypedArray = Int8Array | Uint8Array | Uint8ClampedArray | Int16Array
  *
  * @author padenot
  */
-export interface RingBuffer<T extends TypedArray> {
+export interface RingBuffer {
     /** Returns the type of the underlying ArrayBuffer for this RingBuffer. This allows implementing crude type checking. */
     readonly type: string;
     /** Push bytes to the ring buffer. `bytes` is a typed array of the same type as passed in the ctor, to be written to the queue. Returns the number of elements written to the queue. */
-    push(elements: T): number;
+    push(elements: TypedArray): number;
     /** Read `elements.length` elements from the ring buffer. `elements` is a typed array of the same type as passed in the ctor. Returns the number of elements read from the queue, they are placed at the beginning of the array passed as parameter. */
-    pop(elements: T): number;
+    pop(elements: TypedArray): number;
     /** True if the ring buffer is empty false otherwise. This can be late on the reader side: it can return true even if something has just been pushed. */
     readonly empty: boolean;
     /** True if the ring buffer is full, false otherwise. This can be late on the write side: it can return true when something has just been popped. */
@@ -314,8 +314,18 @@ export const RingBuffer: {
      * `sab` is a SharedArrayBuffer with a capacity calculated by calling
      * `getStorageForCapacity` with the desired capacity.
      */
-    new <T extends TypedArrayConstructor>(sab: SharedArrayBuffer, Type: T): RingBuffer<InstanceType<T>>;
+    new (sab: SharedArrayBuffer, Type: TypedArrayConstructor): RingBuffer;
 };
+
+// Maybe there's a more elegant way to do this so as to avoid repeating the above?
+export interface RingBufferConstructor {
+    getStorageForCapacity(capacity: number, Type: TypedArrayConstructor): SharedArrayBuffer;
+    /**
+     * `sab` is a SharedArrayBuffer with a capacity calculated by calling
+     * `getStorageForCapacity` with the desired capacity.
+     */
+    new (sab: SharedArrayBuffer, Type: TypedArrayConstructor): RingBuffer;
+}
 
 export interface AudioWorkletGlobalScope {
     registerProcessor: (name: string, constructor: new (options: any) => AudioWorkletProcessor) => void;
