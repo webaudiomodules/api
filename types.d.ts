@@ -317,15 +317,81 @@ export const RingBuffer: {
     new (sab: SharedArrayBuffer, Type: TypedArrayConstructor): RingBuffer;
 };
 
-// Maybe there's a more elegant way to do this so as to avoid repeating the above?
-export interface RingBufferConstructor {
-    getStorageForCapacity(capacity: number, Type: TypedArrayConstructor): SharedArrayBuffer;
-    /**
-     * `sab` is a SharedArrayBuffer with a capacity calculated by calling
-     * `getStorageForCapacity` with the desired capacity.
-     */
-    new (sab: SharedArrayBuffer, Type: TypedArrayConstructor): RingBuffer;
+export interface WamEventRingBuffer {
+	/**
+	 * Write WamEvents to the ring buffer, returning
+	 * the number of events successfully written.
+	 */
+	write(...events: WamEvent[]): number;
+
+	/**
+	 * Read WamEvents from the ring buffer, returning
+	 * the list of events successfully read.
+	 */
+	read(): WamEvent[];
 }
+export const WamEventRingBuffer: {
+	/**
+	 * Number of bytes required for WamEventBase
+	 * {uint32} total event size in bytes
+	 * {uint8} encoded event type
+	 * {float64} time
+	 */
+	WamEventBaseBytes: number;
+
+	/**
+	 * Number of bytes required for WamAutomationEvent
+	 * {WamEventBaseBytes} common event properties
+	 * {uint16} encoded parameter id
+	 * {float64} value
+	 * {uint8} normalized
+	 */
+	WamAutomationEventBytes: number;
+
+	/**
+	 * Number of bytes required for WamTransportEvent
+	 * {WamEventBaseBytes} common event properties
+	 * {uint32} current bar
+	 * {float64} currentBarStarted
+	 * {float64} tempo
+	 * {uint8} time signature numerator
+	 * {uint8} time signature denominator
+	 */
+	WamTransportEventBytes: number;
+
+	/**
+	 * Number of bytes required for WamMidiEvent or WamMpeEvent
+	 * {WamEventBaseBytes} common event properties
+	 * {uint8} status byte
+	 * {uint8} data1 byte
+	 * {uint8} data2 byte
+	 */
+	WamMidiEventBytes: number;
+
+	/**
+	 * Number of bytes required for WamSysexEvent or WamOscEvent
+	 * (total number depends on content of message / size of byte array)
+	 * {WamEventBaseBytes} common event properties
+	 * {uint32} number of bytes in binary array
+	 * {uint8[]} N bytes in binary array depending on message
+	 */
+	WamBinaryEventBytes: number; // + N
+
+	/**
+	 * Returns a SharedArrayBuffer large enough to safely store
+	 * the specified number of events. Specify 'maxBytesPerEvent'
+	 * to support variable-size binary event types like sysex or osc.
+	 */
+	getStorageForEventCapacity(RingBufferConstructor: typeof RingBuffer, eventCapacity: number, maxBytesPerEvent?: number): SharedArrayBuffer;
+
+	/**
+	 * Provides methods for encoding / decoding WamEvents to / from
+	 * a UInt8Array RingBuffer. Specify 'maxBytesPerEvent'
+	 * to support variable-size binary event types like sysex or osc.
+	 */
+	new (RingBufferConstructor: typeof RingBuffer, sab: SharedArrayBuffer, parameterIndices: { [parameterId: string]: number }, maxBytesPerEvent?: number);
+}
+
 
 export interface AudioWorkletGlobalScope {
     registerProcessor: (name: string, constructor: new (options: any) => AudioWorkletProcessor) => void;
@@ -335,4 +401,5 @@ export interface AudioWorkletGlobalScope {
     AudioWorkletProcessor: typeof AudioWorkletProcessor;
     webAudioModules: WamEnv;
     RingBuffer: typeof RingBuffer;
+    WamEventRingBuffer: typeof WamEventRingBuffer;
 }
