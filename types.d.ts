@@ -230,8 +230,8 @@ export interface WamMidiData {
     bytes: [number, number, number];
 }
 
-export interface WamSysexData {
-    bytes: number[];
+export interface WamBinaryData {
+    bytes: Uint8Array;
 }
 
 export type WamEventCallback<E extends WamEventType = WamEventType> = (event: WamEventMap[E]) => any;
@@ -249,9 +249,9 @@ export type WamEvent = WamAutomationEvent | WamTransportEvent | WamMidiEvent | W
 export type WamAutomationEvent = WamEventBase<'automation', WamParameterData>;
 export type WamTransportEvent = WamEventBase<'transport', WamTransportData>;
 export type WamMidiEvent = WamEventBase<'midi', WamMidiData>;
-export type WamSysexEvent = WamEventBase<'sysex', WamSysexData>;
+export type WamSysexEvent = WamEventBase<'sysex', WamBinaryData>;
 export type WamMpeEvent = WamEventBase<'mpe', WamMidiData>;
-export type WamOscEvent = WamEventBase<'osc', string>;
+export type WamOscEvent = WamEventBase<'osc', WamBinaryData>;
 
 export interface AudioWorkletProcessor {
     port: MessagePort;
