@@ -201,8 +201,6 @@ export type WamParameterDataMap = Record<string, WamParameterData>;
 
 // EVENTS
 
-export type WamListenerType = 'wam-event' | 'wam-automation' | 'wam-transport' | 'wam-midi' | 'wam-sysex' | 'wam-mpe' | 'wam-osc';
-
 export type WamEventType = keyof WamEventMap;
 
 export interface WamEventBase<T extends WamEventType = WamEventType, D = any> {
@@ -235,21 +233,25 @@ export interface WamBinaryData {
 export type WamEventCallback<E extends WamEventType = WamEventType> = (event: WamEventMap[E]) => any;
 
 export interface WamEventMap {
-    "automation": WamAutomationEvent;
-    "transport": WamTransportEvent;
-    "midi": WamMidiEvent;
-    "sysex": WamSysexEvent;
-    "mpe": WamMpeEvent;
-    "osc": WamOscEvent;
+    'wam-event': WamGeneralEvent;
+    'wam-automation': WamAutomationEvent;
+    'wam-transport': WamTransportEvent;
+    'wam-midi': WamMidiEvent;
+    'wam-sysex': WamSysexEvent;
+    'wam-mpe': WamMpeEvent;
+    'wam-osc': WamOscEvent;
+    'wam-parameter-info': WamParameterInfoEvent;
 }
 
-export type WamEvent = WamAutomationEvent | WamTransportEvent | WamMidiEvent | WamSysexEvent | WamMpeEvent | WamOscEvent;
-export type WamAutomationEvent = WamEventBase<'automation', WamParameterData>;
-export type WamTransportEvent = WamEventBase<'transport', WamTransportData>;
-export type WamMidiEvent = WamEventBase<'midi', WamMidiData>;
-export type WamSysexEvent = WamEventBase<'sysex', WamBinaryData>;
-export type WamMpeEvent = WamEventBase<'mpe', WamMidiData>;
-export type WamOscEvent = WamEventBase<'osc', WamBinaryData>;
+export type WamEvent = WamGeneralEvent | WamAutomationEvent | WamTransportEvent | WamMidiEvent | WamSysexEvent | WamMpeEvent | WamOscEvent | WamParameterInfoEvent;
+export type WamGeneralEvent = WamEventBase<'wam-event', WamParameterData>;
+export type WamAutomationEvent = WamEventBase<'wam-automation', WamParameterData>;
+export type WamTransportEvent = WamEventBase<'wam-transport', WamTransportData>;
+export type WamMidiEvent = WamEventBase<'wam-midi', WamMidiData>;
+export type WamSysexEvent = WamEventBase<'wam-sysex', WamBinaryData>;
+export type WamMpeEvent = WamEventBase<'wam-mpe', WamMidiData>;
+export type WamOscEvent = WamEventBase<'wam-osc', WamBinaryData>;
+export type WamParameterInfoEvent = WamEventBase<'wam-parameter-info', WamParameterInfoMap>;
 
 export interface AudioWorkletProcessor {
     port: MessagePort;
