@@ -260,6 +260,7 @@ export interface AudioWorkletProcessor {
     process(inputs: Float32Array[][], outputs: Float32Array[][], parameters: Record<string, Float32Array>): boolean;
 }
 export const AudioWorkletProcessor: {
+    prototype: AudioWorkletProcessor;
     parameterDescriptors: AudioParamDescriptor[];
     new (options: AudioWorkletNodeOptions): AudioWorkletProcessor;
 };
@@ -277,6 +278,10 @@ export interface WamEnv {
     disconnectEvents(from: WamProcessor, to?: WamProcessor, output?: number): void;
     /** The method should be called when a processor instance is destroyed */
     destroy(wam: WamProcessor): void;
+}
+export const WamEnv: {
+    prototype: WamEnv;
+    new (): WamEnv;
 }
 
 export interface AudioWorkletGlobalScope {
