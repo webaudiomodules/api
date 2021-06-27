@@ -137,7 +137,7 @@ export interface WamProcessor extends AudioWorkletProcessor {
 export const WamProcessor: {
     prototype: WamProcessor;
     new (options: AudioWorkletNodeOptions): WamProcessor;
-};
+} & Pick<typeof AudioWorkletProcessor, "parameterDescriptors">;
 
 // PARAMETERS
 
