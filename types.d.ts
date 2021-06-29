@@ -54,7 +54,7 @@ export const WebAudioModule: {
     /** should return `true` */
     isWebAudioModuleConstructor: boolean;
     /** shorthand for `new` then `initialize`. */
-    createInstance(audioContext: BaseAudioContext, initialState?: any): Promise<WebAudioModule>;
+    createInstance<Node extends WamNode = WamNode>(audioContext: BaseAudioContext, initialState?: any): Promise<WebAudioModule<Node>>;
     /** WAM constructor, should call `initialize` after constructor to get it work */
     new <Node extends WamNode = WamNode>(audioContext: BaseAudioContext): WebAudioModule<Node>;
 };
