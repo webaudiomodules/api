@@ -222,6 +222,8 @@ export interface WamTransportData {
     timeSigNumerator: number;
     /** Beat duration indicator */
     timeSigDenominator: number;
+    /** Run state flags: 0x01 == PLAYING */
+    runFlags: number;
 }
 
 export interface WamMidiData {
