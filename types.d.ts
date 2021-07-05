@@ -222,6 +222,8 @@ export interface WamTransportData {
     timeSigNumerator: number;
     /** Beat duration indicator */
     timeSigDenominator: number;
+    /** Determines if transport is active */
+    playing: boolean;
 }
 
 export interface WamMidiData {
