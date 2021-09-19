@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"moduleResolution": "node",
+		"baseUrl": "./",
+		"target": "es6",
+		"noEmit": true
+	},
+	"include": [
+	  "src/**/*"
+	],
+	"exclude": [
+	  "dist",
+	  "node_modules"
+	]
+}

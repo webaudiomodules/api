@@ -1,0 +1,234 @@
+<!DOCTYPE html><html class="default no-js"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>WebAudioModules API</title><meta name="description" content="Documentation for WebAudioModules API"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">WebAudioModules API</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>WebAudioModules API</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#webaudiomodules-api" id="webaudiomodules-api" style="color: inherit; text-decoration: none;">
+  <h1>WebAudioModules API</h1>
+</a>
+<p>The repository includes API definition files for WebAudioModules (WAM) written in TypeScript, abstract classes that conforms the API written in JavaScript, and different implementations and utilities that can be used in WAM projects.</p>
+
+<a href="#installing-the-api" id="installing-the-api" style="color: inherit; text-decoration: none;">
+  <h2>Installing the API</h2>
+</a>
+<pre><code class="language-Bash"><span class="hl-0">npm i -D @webaudiomodules/api</span>
+</code></pre>
+
+<a href="#api-definitions" id="api-definitions" style="color: inherit; text-decoration: none;">
+  <h2>API definitions</h2>
+</a>
+<p>The WAM API is considered as the plugin specification that should be implemented in each WAM. All the interfaces and types in the specification are described in TypeScript language in <code>src/types.d.ts</code>.</p>
+<p>The API is designed for making Web-based audio plugins (WAMs) and using them in the hosts. As the VST, AudioUnit or AAX standards on the desktop DAWs, audio plugins usually includes an insertable DSP and an UI on the given platform along with some extra features such as parameter automations, MIDI message processing, state saving and loading, etc. These features&#39; interface are standardized in the API for audio plugin and host developers.</p>
+<blockquote>
+<p>VSCode IntelliSense will take the types into account by using JSDoc or TypeScript import. For example:</p>
+</blockquote>
+<pre><code class="language-JavaScript"><span class="hl-1">// JavaScript</span><br/><span class="hl-1">/** </span><span class="hl-2">@typedef</span><span class="hl-1"> </span><span class="hl-3">{import(&#39;@webaudiomodules/api&#39;).WamEvent}</span><span class="hl-1"> </span><span class="hl-3">IWamEvent</span><span class="hl-1"> */</span>
+</code></pre>
+<pre><code class="language-TypeScript"><span class="hl-1">// TypeScript</span><br/><span class="hl-4">import</span><span class="hl-0"> { </span><span class="hl-5">WamEvent</span><span class="hl-0"> } </span><span class="hl-4">from</span><span class="hl-0"> </span><span class="hl-6">&#39;@webaudiomodules/api&#39;</span><span class="hl-0">;</span>
+</code></pre>
+
+<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+  <h3>Features</h3>
+</a>
+<p>The API supports these primary features:</p>
+<ul>
+<li><p>Getting the WAM&#39;s information by fetching a JSON file.</p>
+</li>
+<li><p>Loading the WAM plugin constructor by fetching an ECMAScript Module file.</p>
+</li>
+<li><p>Getting a WebAudio AudioNode-compatible processor that can be inserted into an existing audio graph.</p>
+</li>
+<li><p>Saving and Restoring the plugin&#39;s state.</p>
+</li>
+<li><p>Getting parameter information from both main thread and audio thread (<code>AudioWorklet</code>).</p>
+</li>
+<li><p>Scheduling automation events of audio parameters from both threads.</p>
+</li>
+<li><p>Scheduling transport, MIDI and OSC events with the host from both threads.</p>
+</li>
+<li><p>Emitting events for downstream WAM plugins from both threads.</p>
+</li>
+<li><p>The clean up when the plugin instance is destroyed.</p>
+</li>
+</ul>
+
+<a href="#api-overview" id="api-overview" style="color: inherit; text-decoration: none;">
+  <h3>API Overview</h3>
+</a>
+<p>The interfaces defined are: </p>
+<ul>
+<li><p>A <code>WebAudioModule</code> interface, which is the main entry point of a WAM plugin instance.</p>
+</li>
+<li><p>A <code>WamDescriptor</code> interface, which the descriptor JSON file should provide as the plugin&#39;s general information.</p>
+</li>
+<li><p>A <code>WamNode</code> interface, which extends WebAudio <code>AudioNode</code> that will be connected to the host&#39;s audio graph.</p>
+</li>
+<li><p>A <code>WamProcessor</code> interface, which extends <code>AudioWorkletProcessor</code> that process signals in the audio thread.</p>
+</li>
+<li><p>A <code>WamParameter</code> interface, which provides parameter information on both threads.</p>
+</li>
+<li><p>A <code>WamEvent</code> interface, which can be used to schedule or emit WAM related events like automations or MIDI messages.</p>
+</li>
+<li><p>A <code>WamEnv</code> interface, which is available on the audio thread to maintain the graph information there.</p>
+</li>
+</ul>
+
+<a href="#webaudiomodule-interface" id="webaudiomodule-interface" style="color: inherit; text-decoration: none;">
+  <h3>WebAudioModule interface</h3>
+</a>
+<p>As a WAM distribution should include at least a descriptor in JSON and a JavaScript file that exports by default a WebAudioModule constructor. The constructor should provide statically:</p>
+<ol>
+<li><p><code>isWebAudioModuleConstructor</code> getter that returns <code>true</code>.</p>
+</li>
+<li><p><code>createInstance</code> method that asynchronously instantiates the WebAudioModule.</p>
+<blockquote>
+<p>This method is a short hand for calling the constructor then the <code>initialize</code> method, and should return a Promise that resolves the WebAudioModule constructed and initialized.</p>
+</blockquote>
+</li>
+<li><p>the <code>new</code> constructor.</p>
+<blockquote>
+<p>The WAM instance constructed by the <code>new</code> operator is only usable after calling <code>initialize</code> method.</p>
+</blockquote>
+</li>
+</ol>
+<p>From the host side, once imported the default export from the ESM module, the host can firstly do a type check using the <code>isWebAudioModuleConstructor</code> getter, then construct the WAM instance using the <code>createInstance</code> method. For example,</p>
+<pre><code class="language-JavaScript"><span class="hl-1">/** </span><span class="hl-2">@typedef</span><span class="hl-1"> </span><span class="hl-3">{typeof import(&#39;@webaudiomodules/api&#39;).WebAudioModule}</span><span class="hl-1"> </span><span class="hl-3">WebAudioModuleConstructor</span><span class="hl-1"> */</span><br/><span class="hl-0">(</span><span class="hl-2">async</span><span class="hl-0"> () </span><span class="hl-2">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">audioCtx</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-8">AudioContext</span><span class="hl-0">();</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">initialState</span><span class="hl-0"> = {};</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">imported</span><span class="hl-0"> = </span><span class="hl-4">await</span><span class="hl-0"> </span><span class="hl-2">import</span><span class="hl-0">(</span><span class="hl-6">&#39;./path_to_wam/index.js&#39;</span><span class="hl-0">);</span><br/><span class="hl-0">    </span><span class="hl-1">/** </span><span class="hl-2">@type</span><span class="hl-1"> </span><span class="hl-3">{WebAudioModuleConstructor}</span><span class="hl-1"> */</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">WAM</span><span class="hl-0"> = </span><span class="hl-5">imported</span><span class="hl-0">.</span><span class="hl-5">default</span><span class="hl-0">;</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">isWAM</span><span class="hl-0"> = </span><span class="hl-2">typeof</span><span class="hl-0"> </span><span class="hl-7">WAM</span><span class="hl-0"> === </span><span class="hl-6">&#39;function&#39;</span><span class="hl-0"> &amp;&amp; </span><span class="hl-7">WAM</span><span class="hl-0">.</span><span class="hl-5">isWebAudioModuleConstructor</span><span class="hl-0">;</span><br/><span class="hl-0">    </span><span class="hl-4">if</span><span class="hl-0"> (!</span><span class="hl-5">isWAM</span><span class="hl-0">) </span><span class="hl-4">return</span><span class="hl-0">;</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">wam</span><span class="hl-0"> = </span><span class="hl-4">await</span><span class="hl-0"> </span><span class="hl-7">WAM</span><span class="hl-0">.</span><span class="hl-8">createInstance</span><span class="hl-0">(</span><span class="hl-5">audioCtx</span><span class="hl-0">, </span><span class="hl-5">initialState</span><span class="hl-0">);</span><br/><span class="hl-0">    </span><span class="hl-4">return</span><span class="hl-0"> </span><span class="hl-5">wam</span><span class="hl-0">;</span><br/><span class="hl-0">})();</span>
+</code></pre>
+<p>Here, </p>
+<pre><code class="language-JavaScript"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">wam</span><span class="hl-0"> = </span><span class="hl-4">await</span><span class="hl-0"> </span><span class="hl-7">WAM</span><span class="hl-0">.</span><span class="hl-8">createInstance</span><span class="hl-0">(</span><span class="hl-5">audioCtx</span><span class="hl-0">, </span><span class="hl-5">initialState</span><span class="hl-0">);</span>
+</code></pre>
+<p>is equivalent to </p>
+<pre><code class="language-JavaScript"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">wam</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-8">WAM</span><span class="hl-0">(</span><span class="hl-5">audioCtx</span><span class="hl-0">);</span><br/><span class="hl-4">await</span><span class="hl-0"> </span><span class="hl-5">wam</span><span class="hl-0">.</span><span class="hl-8">initialize</span><span class="hl-0">(</span><span class="hl-5">initialState</span><span class="hl-0">);</span>
+</code></pre>
+<p>The following properties and methods should also be implemented.</p>
+<ol>
+<li><p><code>isWebAudioModule</code> getter that returns <code>true</code>.</p>
+</li>
+<li><p><code>audioContext</code> getter that returns the current <code>BaseAudioContext</code> the WAM belongs to.</p>
+</li>
+<li><p><code>audioNode</code> getter that returns the <code>AudioNode</code> to be attached to an audio graph.</p>
+</li>
+<li><p><code>initialized</code> getter that returns <code>false</code> before initialized, and <code>true</code> after.</p>
+</li>
+<li><p><code>moduleId</code> getter that returns an identifier of the current WAM, usually composed by its vender + its name.</p>
+</li>
+<li><p><code>instanceId</code> getter that returns the unique identifier of the current WAM instance.</p>
+</li>
+<li><p><code>descriptor</code> getter that returns a <code>WamDescriptor</code>, same as the WAM&#39;s information in the JSON file.</p>
+</li>
+<li><p><code>name</code> getter that returns the WAM&#39;s name.</p>
+</li>
+<li><p><code>vendor</code> getter that returns the WAM vendor&#39;s name.</p>
+</li>
+<li><p><code>initialize</code> method to asynchronously initialize the newly constructed WAM and its <code>AudioNode</code>, accepting one optional argument to set its initial state, returning a Promise that resolves a <code>WamNode</code>. After initialized, the WAM will be available to connect its <code>AudioNode</code> to the host&#39;s audio graph.</p>
+</li>
+<li><p><code>createGui</code> method to asynchronously create an <code>Element</code> that can be attached to the HTML Document as the WAM&#39;s GUI, returning a Promise that resolves an <code>Element</code>.</p>
+<blockquote>
+<p>There could be multiple GUI controlling the same WAM. Make sure all the GUI can control the WAM and are responding to any state change.</p>
+</blockquote>
+</li>
+<li><p><code>destroyGui</code> method, used to clean up a created GUI, accepting an argument of type <code>Element</code> which is an existing but no longer useful GUI, returning <code>void</code>.</p>
+</li>
+</ol>
+<p>For example, a host can get and append to the document the WAM&#39;s GUI by doing following:</p>
+<pre><code class="language-JavaScript"><span class="hl-0">(</span><span class="hl-2">async</span><span class="hl-0"> () </span><span class="hl-2">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">container</span><span class="hl-0"> = </span><span class="hl-5">document</span><span class="hl-0">.</span><span class="hl-8">getElementById</span><span class="hl-0">(</span><span class="hl-6">&#39;wam-container&#39;</span><span class="hl-0">);</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">wamGui</span><span class="hl-0"> = </span><span class="hl-4">await</span><span class="hl-0"> </span><span class="hl-5">wam</span><span class="hl-0">.</span><span class="hl-8">createGui</span><span class="hl-0">();</span><br/><span class="hl-0">    </span><span class="hl-5">container</span><span class="hl-0">.</span><span class="hl-8">appendChild</span><span class="hl-0">(</span><span class="hl-5">wamGui</span><span class="hl-0">);</span><br/><span class="hl-0">})();</span>
+</code></pre>
+<p>and remove it by:</p>
+<pre><code class="language-JavaScript"><span class="hl-5">wamGui</span><span class="hl-0">.</span><span class="hl-8">remove</span><span class="hl-0">();</span><br/><span class="hl-5">wam</span><span class="hl-0">.</span><span class="hl-8">destroyGui</span><span class="hl-0">(</span><span class="hl-5">wamGui</span><span class="hl-0">);</span>
+</code></pre>
+<p>To connect an initialized WAM to an audio graph:</p>
+<pre><code class="language-JavaScript"><span class="hl-0">(</span><span class="hl-2">async</span><span class="hl-0"> () </span><span class="hl-2">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">defaultConstraints</span><span class="hl-0"> = {</span><br/><span class="hl-0">        </span><span class="hl-5">audio:</span><span class="hl-0"> {</span><br/><span class="hl-0">            </span><span class="hl-5">echoCancellation:</span><span class="hl-0"> </span><span class="hl-2">false</span><span class="hl-0">,</span><br/><span class="hl-0">            </span><span class="hl-5">mozNoiseSuppression:</span><span class="hl-0"> </span><span class="hl-2">false</span><span class="hl-0">,</span><br/><span class="hl-0">            </span><span class="hl-5">mozAutoGainControl:</span><span class="hl-0"> </span><span class="hl-2">false</span><span class="hl-0">,</span><br/><span class="hl-0">        },</span><br/><span class="hl-0">    };</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">stream</span><span class="hl-0"> = </span><span class="hl-4">await</span><span class="hl-0"> </span><span class="hl-5">navigator</span><span class="hl-0">.</span><span class="hl-5">mediaDevices</span><span class="hl-0">.</span><span class="hl-8">getUserMedia</span><span class="hl-0">(</span><span class="hl-5">defaultConstraints</span><span class="hl-0">);</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">inputNode</span><span class="hl-0"> = </span><span class="hl-5">audioCtx</span><span class="hl-0">.</span><span class="hl-8">createMediaStreamSource</span><span class="hl-0">(</span><span class="hl-5">stream</span><span class="hl-0">);</span><br/><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> { </span><span class="hl-7">audioNode</span><span class="hl-0"> } = </span><span class="hl-5">wam</span><span class="hl-0">;</span><br/><span class="hl-0">    </span><span class="hl-5">inputNode</span><span class="hl-0">.</span><span class="hl-8">connect</span><span class="hl-0">(</span><span class="hl-5">audioNode</span><span class="hl-0">);</span><br/><span class="hl-0">    </span><span class="hl-5">audioNode</span><span class="hl-0">.</span><span class="hl-8">connect</span><span class="hl-0">(</span><span class="hl-5">audioCtx</span><span class="hl-0">.</span><span class="hl-5">destination</span><span class="hl-0">);</span><br/><span class="hl-0">})();</span>
+</code></pre>
+
+<a href="#wamdescriptor-interface" id="wamdescriptor-interface" style="color: inherit; text-decoration: none;">
+  <h3>WamDescriptor interface</h3>
+</a>
+<p>The WAM descriptor contains information that can be used for the host to properly categorize, display, and load WAM by its features. The <code>WamDescriptor</code> interface is an object used in the WAM&#39;s descriptor JSON file and in its instance&#39;s <code>descriptor</code> property. It has the following properties.</p>
+<ol>
+<li><code>name</code>: the WAM&#39;s name.</li>
+<li><code>vendor</code>: the WAM vendor&#39;s name.</li>
+<li><code>version</code>: current version (string).</li>
+<li><code>sdkVersion</code>: the WAM SDK (API) version used.</li>
+<li><code>thumbnail</code>: a URL containing an image for the WAM&#39;s thumbnail.</li>
+<li><code>keywords</code>: an array of keyword strings.</li>
+<li><code>isInstrument</code>: boolean, <code>true</code> if the WAM is a MIDI instrument.</li>
+<li><code>website</code>: a URL of the WAM&#39;s development website.</li>
+</ol>
+<p>a set of boolean properties indicating the IO support of the WAM. They are optional in the descriptor JSON, but mandatory to the <code>descriptor</code> getter under the <code>WebAudioModule</code> interface. These properties will affect the WAM&#39;s behavior in the host when it receives audio or events from the upstream WAMs.</p>
+<ol start="9">
+<li><code>hasAudioInput</code></li>
+<li><code>hasAudioOutput</code></li>
+<li><code>hasMidiInput</code></li>
+<li><code>hasMidiOutput</code></li>
+<li><code>hasAutomationInput</code></li>
+<li><code>hasAutomationOutput</code></li>
+<li><code>hasMpeInput</code></li>
+<li><code>hasMpeOutput</code></li>
+<li><code>hasOscInput</code></li>
+<li><code>hasOscOutput</code></li>
+<li><code>hasSysexInput</code></li>
+<li><code>hasSysexOutput</code></li>
+</ol>
+
+<a href="#wamnode-interface" id="wamnode-interface" style="color: inherit; text-decoration: none;">
+  <h3>WamNode interface</h3>
+</a>
+<p><code>WamNode</code> is an extended WebAudio <code>AudioNode</code>, available with the <code>audioNode</code> getter under the <code>WebAudioModule</code> interface. </p>
+<p>A WAM host will use its native (or overridden) <a href="https://www.w3.org/TR/webaudio/#dom-audionode-connect"><code>connect</code></a> and <a href="https://www.w3.org/TR/webaudio/#dom-audionode-disconnect"><code>disconnect</code></a> methods to run its underlying DSP in an audio graph. The <code>WamNode</code> can also be the destination node of any <code>AudioNode</code> connection.</p>
+<p>In this <code>WamNode</code> interface, the related <code>WebAudioModule</code> can be found using the <code>module</code> getter.</p>
+<p>It has following methods:</p>
+<p>Lifecycle related:</p>
+<ol>
+<li><code>destroy</code>: This method should be called by the host before removing the <code>WamNode</code>. The WAM developer could perform a clean up by overriding this method. For example, remove event listeners or close AudioWorklet port.</li>
+</ol>
+<p>State related:</p>
+<ol start="2">
+<li><code>getState</code></li>
+<li><code>setState</code></li>
+</ol>
+<pre><code class="language-JavaScript"><span class="hl-0">(</span><span class="hl-2">async</span><span class="hl-0"> () </span><span class="hl-2">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-7">currentState</span><span class="hl-0"> = </span><span class="hl-4">await</span><span class="hl-0"> </span><span class="hl-5">wamNode</span><span class="hl-0">.</span><span class="hl-8">getState</span><span class="hl-0">();</span><br/><span class="hl-0">    </span><span class="hl-4">await</span><span class="hl-0"> </span><span class="hl-5">wamNode</span><span class="hl-0">.</span><span class="hl-8">setState</span><span class="hl-0">(</span><span class="hl-5">currentState</span><span class="hl-0">);</span><br/><span class="hl-0">})();</span>
+</code></pre>
+<p>A state could be any serializable type used to save or restore a state of a WAM.</p>
+<p>Parameters related:</p>
+<ol start="4">
+<li><code>getParameterInfo</code></li>
+<li><code>getParameterValues</code></li>
+<li><code>setParameterValues</code></li>
+</ol>
+<p>Note that a WAM parameter is different from WebAudio <code>AudioParam</code> to support audio thread side manipulations. To schedule automations to the WAM parameters, the host can use <code>scheduleEvents</code>.</p>
+<p>Event related:</p>
+<ol start="7">
+<li><code>scheduleEvents</code>: schedule an WAM event with a timestamp.</li>
+<li><code>clearEvents</code>: remove all the future events.</li>
+</ol>
+<p>An WAM events can contain parameter changes, MIDI events, etc. To all a WAM to send events to other WAMs the host can call following methods.</p>
+<ol start="9">
+<li><code>connectEvents</code></li>
+<li><code>disconnectEvents</code></li>
+</ol>
+<p>The connection should be done on the audio thread by calling <code>webAudioModules.connectEvents</code> or <code>webAudioModules.disconnectEvents</code>.</p>
+<p>These events will be dispatched when sended or processed at the scheduled time. The host can capture them by <code>addEventListener</code>.</p>
+<ol start="11">
+<li><code>getCompensationDelay</code>: The host can get a compensation delay hint value in samples. The value is not measured by the host but provided by the WAM developer.</li>
+</ol>
+
+<a href="#wamprocessor-interface" id="wamprocessor-interface" style="color: inherit; text-decoration: none;">
+  <h3>WamProcessor interface</h3>
+</a>
+<p>Each WAM plugin should provide an <code>WamProcessor</code> interface on the <code>AudioWorklet</code> thread. The interface is extended by an <code>AudioWorkletProcessor</code>, created by an <code>WamNode</code>. On the audio thread, the processor can access a <code>WamEnv</code> interface under <code>globalThis.webAudioModules</code>. When the processor is created, it should call <code>webAudioModules.create(this);</code> to register itself to the <code>WamEnv</code>.</p>
+<p><code>WamProcessor</code> has the following getters and methods:</p>
+<ol>
+<li><p><code>moduleId</code> getter: returns an identifier of the current WAM, same as in the <code>WebAudioModule</code> interface.</p>
+</li>
+<li><p><code>instanceId</code> getter: returns the unique identifier of the current WAM instance, same as in the <code>WebAudioModule</code> interface.</p>
+</li>
+<li><p><code>getCompensationDelay</code></p>
+</li>
+<li><p><code>scheduleEvents</code></p>
+</li>
+<li><p><code>clearEvents</code></p>
+</li>
+<li><p><code>destroy</code>: the method should disconnect from its event graph by calling <code>webAudioModules.destroy(this);</code></p>
+</li>
+</ol>
+<p>They are the same as in the <code>WamNode</code> interface.</p>
+<ol start="7">
+<li><code>emitEvents</code> can be used by the WAM to pass any event to downstream WAMs in the event graph.</li>
+</ol>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="tsd-kind-reference"><a href="modules.html#WamEnv" class="tsd-kind-icon">Wam<wbr/>Env</a></li><li class="tsd-kind-reference"><a href="modules.html#WamNode" class="tsd-kind-icon">Wam<wbr/>Node</a></li><li class="tsd-kind-reference"><a href="modules.html#WamParameter" class="tsd-kind-icon">Wam<wbr/>Parameter</a></li><li class="tsd-kind-reference"><a href="modules.html#WamParameterInfo" class="tsd-kind-icon">Wam<wbr/>Parameter<wbr/>Info</a></li><li class="tsd-kind-reference"><a href="modules.html#WamProcessor" class="tsd-kind-icon">Wam<wbr/>Processor</a></li><li class="tsd-kind-reference"><a href="modules.html#WebAudioModule" class="tsd-kind-icon">Web<wbr/>Audio<wbr/>Module</a></li><li class="tsd-kind-interface"><a href="interfaces/AbstractWamEnv.html" class="tsd-kind-icon">Abstract<wbr/>Wam<wbr/>Env</a></li><li class="tsd-kind-interface"><a href="interfaces/AbstractWamNode.html" class="tsd-kind-icon">Abstract<wbr/>Wam<wbr/>Node</a></li><li class="tsd-kind-interface"><a href="interfaces/AbstractWamParameter.html" class="tsd-kind-icon">Abstract<wbr/>Wam<wbr/>Parameter</a></li><li class="tsd-kind-interface"><a href="interfaces/AbstractWamParameterInfo.html" class="tsd-kind-icon">Abstract<wbr/>Wam<wbr/>Parameter<wbr/>Info</a></li><li class="tsd-kind-interface"><a href="interfaces/AbstractWamProcessor.html" class="tsd-kind-icon">Abstract<wbr/>Wam<wbr/>Processor</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/AbstractWebAudioModule.html" class="tsd-kind-icon">Abstract<wbr/>Web<wbr/>Audio<wbr/>Module</a></li><li class="tsd-kind-interface"><a href="interfaces/AudioParamDescriptor.html" class="tsd-kind-icon">Audio<wbr/>Param<wbr/>Descriptor</a></li><li class="tsd-kind-interface"><a href="interfaces/AudioWorkletGlobalScope.html" class="tsd-kind-icon">Audio<wbr/>Worklet<wbr/>Global<wbr/>Scope</a></li><li class="tsd-kind-interface"><a href="interfaces/AudioWorkletProcessor.html" class="tsd-kind-icon">Audio<wbr/>Worklet<wbr/>Processor</a></li><li class="tsd-kind-interface"><a href="interfaces/WamBinaryData.html" class="tsd-kind-icon">Wam<wbr/>Binary<wbr/>Data</a></li><li class="tsd-kind-interface"><a href="interfaces/WamDescriptor.html" class="tsd-kind-icon">Wam<wbr/>Descriptor</a></li><li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/WamEventBase.html" class="tsd-kind-icon">Wam<wbr/>Event<wbr/>Base</a></li><li class="tsd-kind-interface"><a href="interfaces/WamEventMap.html" class="tsd-kind-icon">Wam<wbr/>Event<wbr/>Map</a></li><li class="tsd-kind-interface"><a href="interfaces/WamInfoData.html" class="tsd-kind-icon">Wam<wbr/>Info<wbr/>Data</a></li><li class="tsd-kind-interface"><a href="interfaces/WamMidiData.html" class="tsd-kind-icon">Wam<wbr/>Midi<wbr/>Data</a></li><li class="tsd-kind-interface"><a href="interfaces/WamNodeOptions.html" class="tsd-kind-icon">Wam<wbr/>Node<wbr/>Options</a></li><li class="tsd-kind-interface"><a href="interfaces/WamParameterConfiguration.html" class="tsd-kind-icon">Wam<wbr/>Parameter<wbr/>Configuration</a></li><li class="tsd-kind-interface"><a href="interfaces/WamParameterData.html" class="tsd-kind-icon">Wam<wbr/>Parameter<wbr/>Data</a></li><li class="tsd-kind-interface"><a href="interfaces/WamTransportData.html" class="tsd-kind-icon">Wam<wbr/>Transport<wbr/>Data</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamAutomationEvent" class="tsd-kind-icon">Wam<wbr/>Automation<wbr/>Event</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamEvent" class="tsd-kind-icon">Wam<wbr/>Event</a></li><li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#WamEventCallback" class="tsd-kind-icon">Wam<wbr/>Event<wbr/>Callback</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamEventType" class="tsd-kind-icon">Wam<wbr/>Event<wbr/>Type</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamIODescriptor" class="tsd-kind-icon">WamIODescriptor</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamInfoEvent" class="tsd-kind-icon">Wam<wbr/>Info<wbr/>Event</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamMidiEvent" class="tsd-kind-icon">Wam<wbr/>Midi<wbr/>Event</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamMpeEvent" class="tsd-kind-icon">Wam<wbr/>Mpe<wbr/>Event</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamOscEvent" class="tsd-kind-icon">Wam<wbr/>Osc<wbr/>Event</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamParameterDataMap" class="tsd-kind-icon">Wam<wbr/>Parameter<wbr/>Data<wbr/>Map</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamParameterInfoMap" class="tsd-kind-icon">Wam<wbr/>Parameter<wbr/>Info<wbr/>Map</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamParameterMap" class="tsd-kind-icon">Wam<wbr/>Parameter<wbr/>Map</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamParameterType" class="tsd-kind-icon">Wam<wbr/>Parameter<wbr/>Type</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamSysexEvent" class="tsd-kind-icon">Wam<wbr/>Sysex<wbr/>Event</a></li><li class="tsd-kind-type-alias"><a href="modules.html#WamTransportEvent" class="tsd-kind-icon">Wam<wbr/>Transport<wbr/>Event</a></li><li class="tsd-kind-variable"><a href="modules.html#AbstractWamEnv" class="tsd-kind-icon">Abstract<wbr/>Wam<wbr/>Env</a></li><li class="tsd-kind-variable"><a href="modules.html#AbstractWamNode" class="tsd-kind-icon">Abstract<wbr/>Wam<wbr/>Node</a></li><li class="tsd-kind-variable"><a href="modules.html#AbstractWamParameter" class="tsd-kind-icon">Abstract<wbr/>Wam<wbr/>Parameter</a></li><li class="tsd-kind-variable"><a href="modules.html#AbstractWamParameterInfo" class="tsd-kind-icon">Abstract<wbr/>Wam<wbr/>Parameter<wbr/>Info</a></li><li class="tsd-kind-variable"><a href="modules.html#AbstractWamProcessor" class="tsd-kind-icon">Abstract<wbr/>Wam<wbr/>Processor</a></li><li class="tsd-kind-variable"><a href="modules.html#AbstractWebAudioModule" class="tsd-kind-icon">Abstract<wbr/>Web<wbr/>Audio<wbr/>Module</a></li><li class="tsd-kind-variable"><a href="modules.html#AudioWorkletProcessor" class="tsd-kind-icon">Audio<wbr/>Worklet<wbr/>Processor</a></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script></body></html>

@@ -1,0 +1,21 @@
+# dependencies
+node_modules
+
+# testing
+coverage
+
+# production
+# build/
+# dist/
+# esm/
+
+# ide
+.vscode
+
+# misc
+.DS_Store
+.env*.local
+.log*
+.cache
+lerna-debug.log
+packages/host/yarn-error.log
