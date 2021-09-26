@@ -17,9 +17,9 @@ class WAMProcessor extends AudioWorkletProcessor
     options = options || {}
     if (options.numberOfInputs === undefined)       options.numberOfInputs = 0;
     if (options.numberOfOutputs === undefined)      options.numberOfOutputs = 1;
-    if (options.inputChannelCount === undefined)    options.inputChannelCount  = [];
+    if (options.processorOptions.inputChannelCount === undefined)    options.processorOptions.inputChannelCount  = [];
     if (options.outputChannelCount === undefined)   options.outputChannelCount = [2];
-    if (options.inputChannelCount.length  != options.numberOfInputs)  throw new Error("InvalidArgumentException");
+    if (options.processorOptions.inputChannelCount.length  != options.numberOfInputs)  throw new Error("InvalidArgumentException");
     if (options.outputChannelCount.length != options.numberOfOutputs) throw new Error("InvalidArgumentException");
 
     super(options);
@@ -55,7 +55,7 @@ class WAMProcessor extends AudioWorkletProcessor
     // -- audio io configuration
     this.numInputs  = options.numberOfInputs;
     this.numOutputs = options.numberOfOutputs;
-    this.numInChannels  = options.inputChannelCount;
+    this.numInChannels  = options.processorOptions.inputChannelCount;
     this.numOutChannels = options.outputChannelCount;
     
     var ibufs = this.numInputs  > 0 ? WAM._malloc(this.numInputs)  : 0;
