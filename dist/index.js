@@ -28,10 +28,6 @@ var WamEnv = class {
 
 // src/AbstractWamNode.js
 var WamNode = class extends AudioWorkletNode {
-  static generateWamParameters() {
-    throw new Error("Not Implemented.");
-    return null;
-  }
   constructor(module, options) {
     super(module.audioContext, module.moduleId, options);
   }
