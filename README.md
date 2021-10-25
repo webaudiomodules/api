@@ -2,6 +2,8 @@
 
 The repository includes API definition files for WebAudioModules (WAM) written in TypeScript, abstract classes that conforms the API written in JavaScript, and different implementations and utilities that can be used in WAM projects.
 
+The legacy WAM API is available in branch [v10](https://github.com/webaudiomodules/api/tree/v10).
+
 ## Installing the API
 
 ```Bash
