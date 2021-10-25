@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 /**
  * Main `WebAudioModule` interface,
  * its constructor should be the `export default` of the ESM of each WAM.
@@ -298,6 +297,8 @@ export const WamEnv: {
 }
 
 export interface AudioWorkletGlobalScope {
+    AudioWorkletGlobalScope: any;
+    globalThis: AudioWorkletGlobalScope;
     registerProcessor: (name: string, constructor: new (options: any) => AudioWorkletProcessor) => void;
     currentFrame: number;
     currentTime: number;
