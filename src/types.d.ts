@@ -64,7 +64,7 @@ export interface WamDescriptor extends WamIODescriptor {
     name: string;
     vendor: string;
     version: string;
-    sdkVersion: string;
+    apiVersion: string;
     thumbnail: string;
     keywords: string[];
     isInstrument: boolean;
@@ -278,6 +278,8 @@ export const AudioWorkletProcessor: {
 };
 
 export interface WamEnv {
+    /** The version of the API used */
+    readonly apiVersion: string;
     /** Stores a graph of WamProcessors connected with `connectEvents` for each output of processors */
     readonly eventGraph: Map<WamProcessor, Set<WamProcessor>[]>;
     /** processors map with `instanceId` */

@@ -1,5 +1,9 @@
 // src/AbstractWamEnv.js
 var WamEnv = class {
+  get apiVersion() {
+    throw new Error("Not Implemented.");
+    return null;
+  }
   get eventGraph() {
     throw new Error("Not Implemented.");
     return null;
@@ -269,12 +273,16 @@ var WebAudioModule = class {
     throw new Error("Not Implemented.");
   }
 };
+
+// package.json
+var version = "2.0.0-alpha.2";
 export {
   WamEnv as AbstractWamEnv,
   WamNode as AbstractWamNode,
   WamParameter as AbstractWamParameter,
   WamParameterInfo as AbstractWamParameterInfo,
   WamProcessor as AbstractWamProcessor,
-  WebAudioModule as AbstractWebAudioModule
+  WebAudioModule as AbstractWebAudioModule,
+  version as VERSION
 };
 //# sourceMappingURL=index.js.map
