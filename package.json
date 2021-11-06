@@ -6,6 +6,7 @@
   "main": "dist/index.js",
   "types": "src/index.d.ts",
   "scripts": {
+    "prebuild": "node src/prebuild.js",
     "build": "esbuild src/index.js --target=es2017 --bundle --sourcemap --outdir=dist --format=esm",
     "doc": "typedoc --name \"WebAudioModules API\" --tsconfig ./tsconfig.json --out ./docs/typedoc --logLevel Verbose ./src/index.d.ts"
   },

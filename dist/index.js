@@ -274,8 +274,8 @@ var WebAudioModule = class {
   }
 };
 
-// package.json
-var version = "2.0.0-alpha.2";
+// src/version.js
+var version_default = "2.0.0-alpha.2";
 export {
   WamEnv as AbstractWamEnv,
   WamNode as AbstractWamNode,
@@ -283,6 +283,6 @@ export {
   WamParameterInfo as AbstractWamParameterInfo,
   WamProcessor as AbstractWamProcessor,
   WebAudioModule as AbstractWebAudioModule,
-  version as VERSION
+  version_default as VERSION
 };
 //# sourceMappingURL=index.js.map

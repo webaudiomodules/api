@@ -4,4 +4,4 @@ export { default as AbstractWamParameter } from './AbstractWamParameter.js';
 export { default as AbstractWamParameterInfo } from './AbstractWamParameterInfo.js';
 export { default as AbstractWamProcessor } from './AbstractWamProcessor.js';
 export { default as AbstractWebAudioModule } from './AbstractWebAudioModule.js';
-export { version as VERSION } from "../package.json";
+export { default as VERSION } from "./version.js";
