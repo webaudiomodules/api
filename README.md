@@ -86,6 +86,11 @@ From the host side, once imported the default export from the ESM module, the ho
 /** @typedef {typeof import('@webaudiomodules/api').WebAudioModule} WebAudioModuleConstructor */
 (async () => {
     const audioCtx = new AudioContext();
+	// Init WamEnv
+	const { VERSION: apiVersion } = await import("@webaudiomodules/api");
+	const { addFunctionModule, initializeWamEnv } = await import("@webaudiomodules/sdk");
+	await addFunctionModule(audioContext.audioWorklet, initializeWamEnv, apiVersion);
+    // Init WAM
     const initialState = {};
     const imported = await import('./path_to_wam/index.js');
     /** @type {WebAudioModuleConstructor} */
@@ -180,7 +185,7 @@ The WAM descriptor contains information that can be used for the host to properl
 1. `name`: the WAM's name.
 2. `vendor`: the WAM vendor's name.
 3. `version`: current version (string).
-4. `sdkVersion`: the WAM SDK (API) version used.
+4. `apiVersion`: the WAM API version used.
 5. `thumbnail`: a URL containing an image for the WAM's thumbnail.
 6. `keywords`: an array of keyword strings.
 7. `isInstrument`: boolean, `true` if the WAM is a MIDI instrument.
