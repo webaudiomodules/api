@@ -86,10 +86,10 @@ From the host side, once imported the default export from the ESM module, the ho
 /** @typedef {typeof import('@webaudiomodules/api').WebAudioModule} WebAudioModuleConstructor */
 (async () => {
     const audioCtx = new AudioContext();
-	// Init WamEnv
-	const { VERSION: apiVersion } = await import("@webaudiomodules/api");
-	const { addFunctionModule, initializeWamEnv } = await import("@webaudiomodules/sdk");
-	await addFunctionModule(audioContext.audioWorklet, initializeWamEnv, apiVersion);
+    // Init WamEnv
+    const { VERSION: apiVersion } = await import("@webaudiomodules/api");
+    const { addFunctionModule, initializeWamEnv } = await import("@webaudiomodules/sdk");
+    await addFunctionModule(audioContext.audioWorklet, initializeWamEnv, apiVersion);
     // Init WAM
     const initialState = {};
     const imported = await import('./path_to_wam/index.js');
