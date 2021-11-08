@@ -278,6 +278,8 @@ export const AudioWorkletProcessor: {
 };
 
 export interface WamEnv {
+    /** WAMs should put here under `moduleId` their dependencies. */
+    readonly dependencies: Record<string, any>;
     /** The version of the API used */
     readonly apiVersion: string;
     /** Stores a graph of WamProcessors connected with `connectEvents` for each output of processors */

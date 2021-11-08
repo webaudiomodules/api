@@ -1,5 +1,9 @@
 // src/AbstractWamEnv.js
 var WamEnv = class {
+  get dependencies() {
+    throw new Error("Not Implemented.");
+    return null;
+  }
   get apiVersion() {
     throw new Error("Not Implemented.");
     return null;
