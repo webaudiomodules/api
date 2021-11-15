@@ -1,38 +1,42 @@
 // src/AbstractWamEnv.js
-var WamEnv = class {
-  get dependencies() {
-    throw new Error("Not Implemented.");
-    return null;
+var getWamEnv = (apiVersion) => {
+  class WamEnv {
+    get dependencies() {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    get apiVersion() {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    get eventGraph() {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    get processors() {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    create(wam) {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    connectEvents(from, output, to) {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    disconnectEvents(from, output, to) {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    destroy(wam) {
+      throw new Error("Not Implemented.");
+      return null;
+    }
   }
-  get apiVersion() {
-    throw new Error("Not Implemented.");
-    return null;
-  }
-  get eventGraph() {
-    throw new Error("Not Implemented.");
-    return null;
-  }
-  get processors() {
-    throw new Error("Not Implemented.");
-    return null;
-  }
-  create(wam) {
-    throw new Error("Not Implemented.");
-    return null;
-  }
-  connectEvents(from, output, to) {
-    throw new Error("Not Implemented.");
-    return null;
-  }
-  disconnectEvents(from, output, to) {
-    throw new Error("Not Implemented.");
-    return null;
-  }
-  destroy(wam) {
-    throw new Error("Not Implemented.");
-    return null;
-  }
+  return WamEnv;
 };
+var AbstractWamEnv_default = getWamEnv;
 
 // src/AbstractWamNode.js
 var WamNode = class extends AudioWorkletNode {
@@ -173,33 +177,37 @@ var WamParameterInfo = class {
 };
 
 // src/AbstractWamProcessor.js
-var AudioWorkletProcessor = globalThis.AudioWorkletProcessor;
-var WamProcessor = class extends AudioWorkletProcessor {
-  get moduleId() {
-    throw new Error("Not Implemented.");
-    return null;
+var getWamProcessor = () => {
+  const { AudioWorkletProcessor } = globalThis;
+  class WamProcessor extends AudioWorkletProcessor {
+    get moduleId() {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    get instanceId() {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    getCompensationDelay() {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    scheduleEvents(...events) {
+      throw new Error("Not Implemented.");
+    }
+    emitEvents(...events) {
+      throw new Error("Not Implemented.");
+    }
+    clearEvents() {
+      throw new Error("Not Implemented.");
+    }
+    destroy() {
+      throw new Error("Not Implemented.");
+    }
   }
-  get instanceId() {
-    throw new Error("Not Implemented.");
-    return null;
-  }
-  getCompensationDelay() {
-    throw new Error("Not Implemented.");
-    return null;
-  }
-  scheduleEvents(...events) {
-    throw new Error("Not Implemented.");
-  }
-  emitEvents(...events) {
-    throw new Error("Not Implemented.");
-  }
-  clearEvents() {
-    throw new Error("Not Implemented.");
-  }
-  destroy() {
-    throw new Error("Not Implemented.");
-  }
+  return WamProcessor;
 };
+var AbstractWamProcessor_default = getWamProcessor;
 
 // src/AbstractWebAudioModule.js
 var WebAudioModule = class {
@@ -281,12 +289,12 @@ var WebAudioModule = class {
 // src/version.js
 var version_default = "2.0.0-alpha.2";
 export {
-  WamEnv as AbstractWamEnv,
   WamNode as AbstractWamNode,
   WamParameter as AbstractWamParameter,
   WamParameterInfo as AbstractWamParameterInfo,
-  WamProcessor as AbstractWamProcessor,
   WebAudioModule as AbstractWebAudioModule,
-  version_default as VERSION
+  version_default as VERSION,
+  AbstractWamEnv_default as getAbstractWamEnv,
+  AbstractWamProcessor_default as getAbstractWamProcessor
 };
 //# sourceMappingURL=index.js.map

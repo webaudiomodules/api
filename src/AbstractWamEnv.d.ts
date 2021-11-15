@@ -1,3 +1,5 @@
 import { WamEnv } from './types';
 
-export default WamEnv;
+declare const getWamEnv: (apiVersion: string) => typeof WamEnv;
+
+export default getWamEnv;
