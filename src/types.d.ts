@@ -109,9 +109,9 @@ export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
     /** Clear all pending WamEvents. */
     clearEvents(): void;
     /** Connect an event output stream to another WAM. If no output index is given, assume output 0. */
-    connectEvents(to: WamNode, output?: number): void;
+    connectEvents(toId: string, output?: number): void;
     /** Disconnect an event output stream from another WAM. If no arguments are given, all event streams will be disconnected. */
-    disconnectEvents(to?: WamNode, output?: number): void;
+    disconnectEvents(toId?: string, output?: number): void;
     /** Stop processing and remove the node from the graph. */
     destroy(): void;
 }
@@ -278,23 +278,23 @@ export const AudioWorkletProcessor: {
 };
 
 export interface WamEnv {
-    /** WAMs should put here under `moduleId` their dependencies. */
-    readonly dependencies: Record<string, any>;
     /** The version of the API used */
     readonly apiVersion: string;
-    /** Stores a graph of WamProcessors connected with `connectEvents` for each output of processors */
-    readonly eventGraph: Map<WamProcessor, Set<WamProcessor>[]>;
-    /** processors map with `instanceId` */
-    readonly processors: Record<string, WamProcessor>;
+
+    /** Return the WAM's 'global' scope including any dependencies. */
+    getModuleScope(moduleId: string): Record<string, any>;
     /** The method should be called when a processor instance is created */
     create(wam: WamProcessor): void;
     /** Connect events between `WamProcessor`s, the output number is 0 by default */
-    connectEvents(from: WamProcessor, to: WamProcessor, output?: number): void;
-    /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `to` is omitted, will disconnect every connections */
-    disconnectEvents(from: WamProcessor, to?: WamProcessor, output?: number): void;
+    connectEvents(fromId: string, toId: string, output?: number): void;
+    /** Pass events from `WamProcessor` to other `WamProcessor`s connected downstream*/
+    emitEvents(from: WamProcessor, ...events: WamEvent[])
+    /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `toId` is omitted, will disconnect every connections */
+    disconnectEvents(fromId: string, toId?: string, output?: number): void;
     /** The method should be called when a processor instance is destroyed */
     destroy(wam: WamProcessor): void;
 }
+
 export const WamEnv: {
     prototype: WamEnv;
     new (): WamEnv;

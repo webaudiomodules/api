@@ -14,19 +14,15 @@ const getWamEnv = (apiVersion) => {
 	 * @implements {IWamEnv}
 	 */
 	class WamEnv {
-		get dependencies() { throw new Error('Not Implemented.'); return null; }
-	
 		get apiVersion() { throw new Error('Not Implemented.'); return null; }
-	
-		get eventGraph() { throw new Error('Not Implemented.'); return null; }
-	
-		get processors() { throw new Error('Not Implemented.'); return null; }
 	
 		create(wam) { throw new Error('Not Implemented.'); return null; }
 	
-		connectEvents(from, output, to) { throw new Error('Not Implemented.'); return null; }
-	
-		disconnectEvents(from, output, to) { throw new Error('Not Implemented.'); return null; }
+		connectEvents(fromId, toId, output) { throw new Error('Not Implemented.'); return null; }
+
+		emitEvents(from, ...events) { throw new Error('Not Implemented.'); return null; }
+
+		disconnectEvents(fromId, toId, output) { throw new Error('Not Implemented.'); return null; }
 	
 		destroy(wam) { throw new Error('Not Implemented.'); return null; }
 	}
