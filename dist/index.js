@@ -1,19 +1,7 @@
 // src/AbstractWamEnv.js
 var getWamEnv = (apiVersion) => {
   class WamEnv {
-    get dependencies() {
-      throw new Error("Not Implemented.");
-      return null;
-    }
     get apiVersion() {
-      throw new Error("Not Implemented.");
-      return null;
-    }
-    get eventGraph() {
-      throw new Error("Not Implemented.");
-      return null;
-    }
-    get processors() {
       throw new Error("Not Implemented.");
       return null;
     }
@@ -21,11 +9,15 @@ var getWamEnv = (apiVersion) => {
       throw new Error("Not Implemented.");
       return null;
     }
-    connectEvents(from, output, to) {
+    connectEvents(fromId, toId, output) {
       throw new Error("Not Implemented.");
       return null;
     }
-    disconnectEvents(from, output, to) {
+    emitEvents(from, ...events) {
+      throw new Error("Not Implemented.");
+      return null;
+    }
+    disconnectEvents(fromId, toId, output) {
       throw new Error("Not Implemented.");
       return null;
     }
@@ -83,10 +75,10 @@ var WamNode = class extends AudioWorkletNode {
   async clearEvents() {
     throw new Error("Not Implemented.");
   }
-  connectEvents(to, output) {
+  connectEvents(toId, output) {
     throw new Error("Not Implemented.");
   }
-  disconnectEvents(to, output) {
+  disconnectEvents(toId, output) {
     throw new Error("Not Implemented.");
   }
   destroy() {
