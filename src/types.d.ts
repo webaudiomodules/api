@@ -97,12 +97,12 @@ export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
     /** Compensation delay hint in samples */
     getCompensationDelay(): Promise<number>;
     /** Register a callback function so it will be called when matching events are processed. */
-    addEventListener<K extends keyof WamEventMap>(type: K, listener: (this: this, ev: CustomEvent<WamEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: (this: this, ev: CustomEvent) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener<K extends keyof WamEventMap>(type: K, listener: (this: this | AudioWorkletNode, ev: CustomEvent<WamEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(type: string, listener: (this: this | AudioWorkletNode, ev: CustomEvent) => any, options?: boolean | AddEventListenerOptions): void;
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
     /** Deregister a callback function so it will no longer be called when matching events are processed. */
-    removeEventListener<K extends keyof WamEventMap>(type: K, listener: (this: this, ev: CustomEvent<WamEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: (this: this, ev: CustomEvent) => any, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof WamEventMap>(type: K, listener: (this: this | AudioWorkletNode, ev: CustomEvent<WamEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(type: string, listener: (this: this | AudioWorkletNode, ev: CustomEvent) => any, options?: boolean | AddEventListenerOptions): void;
     removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     /** Schedule a WamEvent. Listeners will be triggered when the event is processed. */
     scheduleEvents(...event: WamEvent[]): void;
