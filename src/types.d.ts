@@ -82,7 +82,7 @@ export interface WamNodeOptions {
     /** The unique identifier of the current WAM instance. */
     instanceId: string;
 }
-export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
+export interface WamNode extends AudioNode {
     /** Current `WebAudioModule`. */
     readonly module: WebAudioModule;
 

@@ -331,7 +331,7 @@ var WebAudioModule = class {
 };
 
 // src/version.js
-var version_default = "2.0.0-alpha.2";
+var version_default = "2.0.0-alpha.3";
 export {
   WamNode as AbstractWamNode,
   WamParameter as AbstractWamParameter,
