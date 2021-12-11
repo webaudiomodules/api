@@ -23,7 +23,8 @@
     "url": "git+https://github.com/%40webaudiomodules/api.git"
   },
   "devDependencies": {
-    "esbuild": "^0.13.12",
+    "dts-bundle-generator": "^6.2.0",
+    "esbuild": "^0.14.2",
     "typedoc": "^0.22.8",
     "typescript": "^4.4.4"
   },
@@ -33,6 +34,5 @@
   "homepage": "https://github.com/%40webaudiomodules/api#readme",
   "directories": {
     "doc": "docs"
-  },
-  "dependencies": {}
+  }
 }

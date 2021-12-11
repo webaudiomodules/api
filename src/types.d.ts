@@ -324,7 +324,7 @@ export interface WamEnv {
     /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `toId` is omitted, will disconnect every connections */
     disconnectEvents(groupId: string, fromId: string, toId?: string, output?: number): void;
     /** Pass events from `WamProcessor` to other `WamProcessor`s connected downstream*/
-    emitEvents(from: WamProcessor, ...events: WamEvent[])
+    emitEvents(from: WamProcessor, ...events: WamEvent[]): any;
 }
 
 export const WamEnv: {
