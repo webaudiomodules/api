@@ -26,6 +26,8 @@ export default class WebAudioModule {
 	get initialized() { throw new Error('Not Implemented.'); return null; }
 	set initialized(initialized) { throw new Error('Not Implemented.'); }
 
+	get groupId() { throw new Error('Not Implemented.'); return null; }
+	
 	get moduleId() { throw new Error('Not Implemented.'); return null; }
 
 	get instanceId() { throw new Error('Not Implemented.'); return null; }

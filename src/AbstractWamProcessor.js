@@ -5,7 +5,7 @@
  * then inject to the audio thread using `URL.createObjectURL()`.
  * See `addFunctionModule` in the SDK.
  */
-const getWamProcessor = () => {
+const getWamProcessor = (groupId, moduleId) => {
 	/** @type {import('./types').AudioWorkletGlobalScope} */
 	const { AudioWorkletProcessor } = globalThis;
 
@@ -16,6 +16,8 @@ const getWamProcessor = () => {
 	 * @implements {IWamProcessor}
 	 */
 	class WamProcessor extends AudioWorkletProcessor {
+		get groupId() { throw new Error('Not Implemented.'); return null; }
+
 		get moduleId() { throw new Error('Not Implemented.'); return null; }
 	
 		get instanceId() { throw new Error('Not Implemented.'); return null; }

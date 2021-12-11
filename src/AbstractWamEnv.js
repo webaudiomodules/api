@@ -4,6 +4,7 @@
  * The function can be stringified using `function.toString()`,
  * then inject to the audio thread using `URL.createObjectURL()`.
  * See `addFunctionModule` in the SDK.
+ 
  * @param {string} apiVersion
  */
 const getWamEnv = (apiVersion) => {
@@ -14,17 +15,23 @@ const getWamEnv = (apiVersion) => {
 	 * @implements {IWamEnv}
 	 */
 	class WamEnv {
+		get groupId() { throw new Error('Not Implemented.'); return null; }
+
 		get apiVersion() { throw new Error('Not Implemented.'); return null; }
+
+		addGroup(group) { throw new Error('Not Implemented.'); return null; }
+
+		removeGroup(group) { throw new Error('Not Implemented.'); return null; }
 	
-		create(wam) { throw new Error('Not Implemented.'); return null; }
+		addWam(wam) { throw new Error('Not Implemented.'); return null; }
+
+		removeWam(wam) { throw new Error('Not Implemented.'); return null; }
 	
-		connectEvents(fromId, toId, output) { throw new Error('Not Implemented.'); return null; }
+		connectEvents(groupId, fromId, toId, output) { throw new Error('Not Implemented.'); return null; }
+
+		disconnectEvents(groupId, fromId, toId, output) { throw new Error('Not Implemented.'); return null; }
 
 		emitEvents(from, ...events) { throw new Error('Not Implemented.'); return null; }
-
-		disconnectEvents(fromId, toId, output) { throw new Error('Not Implemented.'); return null; }
-	
-		destroy(wam) { throw new Error('Not Implemented.'); return null; }
 	}
 	
 	return WamEnv;

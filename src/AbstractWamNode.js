@@ -11,7 +11,9 @@ export default class WamNode extends AudioWorkletNode {
 		super(module.audioContext, module.moduleId, options);
 	}
 
-	get processorId() { throw new Error('Not Implemented.'); return null; }
+	get groupId() { throw new Error('Not Implemented.'); return null; }
+
+	get moduleId() { throw new Error('Not Implemented.'); return null; }
 
 	get instanceId() { throw new Error('Not Implemented.'); return null; }
 
