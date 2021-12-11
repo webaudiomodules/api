@@ -299,7 +299,7 @@ export interface WamGroup {
 
 export const WamGroup: {
     prototype: WamGroup;
-    new (groupId: string): WamGroup;
+    new (groupId: string, groupKey: string): WamGroup;
 }
 
 export interface WamEnv {
