@@ -84,7 +84,7 @@ export interface WamNodeOptions {
     /** The identifier of the current WAM instance. */
     instanceId: string;
 }
-export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
+export interface WamNode extends AudioNode {
     /** Current `WebAudioModule`. */
     readonly module: WebAudioModule;
 
@@ -331,7 +331,7 @@ export interface WamEnv {
     /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `toId` is omitted, will disconnect every connections */
     disconnectEvents(groupId: string, fromId: string, toId?: string, output?: number): void;
     /** Pass events from `WamProcessor` to other `WamProcessor`s connected downstream*/
-    emitEvents(from: WamProcessor, ...events: WamEvent[])
+    emitEvents(from: WamProcessor, ...events: WamEvent[]): any;
 }
 
 export const WamEnv: {
