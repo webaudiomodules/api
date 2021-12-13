@@ -19,11 +19,15 @@ const initializeWamGroup = (groupId, groupKey) => {
 
 		validate(groupKey) { throw new Error('Not Implemented.'); return null; }
 
-		getModuleScope(moduleId) { throw new Error('Not Implemented.'); return null; }
+		addWam(wam) { throw new Error('Not Implemented.'); return null; }
 
-		getEventGraph() { throw new Error('Not Implemented.'); return null; }
+		removeWam(wam) { throw new Error('Not Implemented.'); return null; }
+	
+		connectEvents(fromId, toId, output) { throw new Error('Not Implemented.'); return null; }
 
-		getProcessors() { throw new Error('Not Implemented.'); return null; }
+		disconnectEvents(fromId, toId, output) { throw new Error('Not Implemented.'); return null; }
+
+		emitEvents(from, ...events) { throw new Error('Not Implemented.'); return null; }
 	}
 	
 	return WamGroup;

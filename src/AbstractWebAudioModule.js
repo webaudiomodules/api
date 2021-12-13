@@ -11,9 +11,9 @@
 export default class WebAudioModule {
 	static get isWebAudioModuleConstructor() { throw new Error('Not Implemented.'); return null; }
 
-	static async createInstance(audioContext, initialState) { throw new Error('Not Implemented.'); return null; }
+	static async createInstance(groupId, audioContext, initialState) { throw new Error('Not Implemented.'); return null; }
 
-	constructor(audioContext) {}
+	constructor(groupId, audioContext) {}
 
 	get isWebAudioModule() { throw new Error('Not Implemented.'); return null; }
 

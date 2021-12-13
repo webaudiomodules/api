@@ -77,9 +77,11 @@ export interface WamDescriptor extends WamIODescriptor {
 // Node
 
 export interface WamNodeOptions {
-    /** The identifier of the WAM `AudioWorkletProcessor`. */
+    /** The identifier of the current WAM instance's `WamGroup`. */
+    groupId: string;
+    /** The identifier of the WAM's `AudioWorkletProcessor`. */
     moduleId: string;
-    /** The unique identifier of the current WAM instance. */
+    /** The identifier of the current WAM instance. */
     instanceId: string;
 }
 export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
@@ -286,15 +288,21 @@ export const AudioWorkletProcessor: {
 };
 
 export interface WamGroup {
+    /** The group's unique identifier. */
     readonly groupId: string;
 
+    /** Used to control access to the group instance via `WamEnv`. */
     validate(groupKey: string): boolean;
-
-    getModuleScope(moduleId: string): any;
-
-    getEventGraph(): Map<WamProcessor, Set<WamProcessor>[]>;
-
-    getProcessors(): Map<string, WamProcessor>;
+    /** Add the WAM to the group. */
+    addWam(wam: WamProcessor): void;
+    /** Remove the WAM from the group. */
+    removeWam(wam: WamProcessor): void;
+    /** Connect events between `WamProcessor`s, the output number is 0 by default. 'from' and 'to' must both be members of this group. */
+    connectEvents(fromId: string, toId: string, output?: number): void;
+    /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `toId` is omitted, will disconnect every connections. 'from' and 'to' must both be members of this group. */
+    disconnectEvents(fromId: string, toId?: string, output?: number): void;
+    /** Pass events from `WamProcessor` to other `WamProcessor`s connected downstream within this group. */
+    emitEvents(from: WamProcessor, ...events: WamEvent[])
 }
 
 export const WamGroup: {
@@ -306,6 +314,8 @@ export interface WamEnv {
     /** The version of the API used */
     readonly apiVersion: string;
 
+    /** Return the WAM's 'global scope' including any dependencies. */
+    getModuleScope(moduleId: string): Record<string, any>;
     /** Return specified WamGroup */
     getGroup(groupId: string, groupKey: string): WamGroup;
     /** The method should be called when a group is created */
@@ -316,9 +326,6 @@ export interface WamEnv {
     addWam(wam: WamProcessor): void;
     /** The method should be called before a processor instance is destroyed */
     removeWam(wam: WamProcessor): void;
-
-    /** Return the WAM's 'global' scope including any dependencies. */
-    getModuleScope(groupId: string, moduleId: string): Record<string, any>;
     /** Connect events between `WamProcessor`s, the output number is 0 by default */
     connectEvents(groupId: string, fromId: string, toId: string, output?: number): void;
     /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `toId` is omitted, will disconnect every connections */

@@ -15,9 +15,11 @@ const getWamEnv = (apiVersion) => {
 	 * @implements {IWamEnv}
 	 */
 	class WamEnv {
-		get groupId() { throw new Error('Not Implemented.'); return null; }
-
 		get apiVersion() { throw new Error('Not Implemented.'); return null; }
+
+		getModuleScope(moduleId) { throw new Error('Not Implemented.'); return null; }
+
+		getGroup(groupId, groupKey) { throw new Error('Not Implemented.'); return null; }
 
 		addGroup(group) { throw new Error('Not Implemented.'); return null; }
 
