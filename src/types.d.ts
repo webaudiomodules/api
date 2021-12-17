@@ -48,7 +48,7 @@ export interface WebAudioModule<Node extends WamNode = WamNode> {
     /** Redefine this method to get the WAM's GUI as an HTML `Element`. */
     createGui(): Promise<Element>;
     /** Clean up an element previously returned by `createGui` */
-    destroyGui(gui: Element): void
+    destroyGui(gui: Element): void;
 }
 export const WebAudioModule: {
     prototype: WebAudioModule;
@@ -302,7 +302,7 @@ export interface WamGroup {
     /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `toId` is omitted, will disconnect every connections. 'from' and 'to' must both be members of this group. */
     disconnectEvents(fromId: string, toId?: string, output?: number): void;
     /** Pass events from `WamProcessor` to other `WamProcessor`s connected downstream within this group. */
-    emitEvents(from: WamProcessor, ...events: WamEvent[])
+    emitEvents(from: WamProcessor, ...events: WamEvent[]): void;
 }
 
 export const WamGroup: {
