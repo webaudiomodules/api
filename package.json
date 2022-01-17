@@ -1,12 +1,14 @@
 {
   "name": "@webaudiomodules/api",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-alpha.3",
   "description": "WebAudioModules Plugin API",
   "type": "module",
   "main": "dist/index.js",
   "types": "src/index.d.ts",
   "scripts": {
+    "prebuild": "node src/prebuild.js",
     "build": "esbuild src/index.js --target=es2017 --bundle --sourcemap --outdir=dist --format=esm",
+    "postbuild": "dts-bundle-generator -o dist/index.d.ts src/index.ts --external-imports",
     "doc": "typedoc --name \"WebAudioModules API\" --tsconfig ./tsconfig.json --out ./docs/typedoc --logLevel Verbose ./src/index.d.ts"
   },
   "keywords": [
@@ -22,9 +24,10 @@
     "url": "git+https://github.com/%40webaudiomodules/api.git"
   },
   "devDependencies": {
-    "esbuild": "^0.12.29",
-    "typedoc": "^0.22.5",
-    "typescript": "^4.4.3"
+    "dts-bundle-generator": "^6.2.0",
+    "esbuild": "^0.14.2",
+    "typedoc": "^0.22.10",
+    "typescript": "^4.5.3"
   },
   "bugs": {
     "url": "https://github.com/%40webaudiomodules/api/issues"
@@ -32,6 +35,5 @@
   "homepage": "https://github.com/%40webaudiomodules/api#readme",
   "directories": {
     "doc": "docs"
-  },
-  "dependencies": {}
+  }
 }

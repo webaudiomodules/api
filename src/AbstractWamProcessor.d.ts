@@ -1,3 +1,5 @@
 import { WamProcessor } from './types';
 
-export default WamProcessor;
+declare const getWamProcessor: () => typeof WamProcessor;
+
+export default getWamProcessor;

@@ -11,9 +11,9 @@
 export default class WebAudioModule {
 	static get isWebAudioModuleConstructor() { throw new Error('Not Implemented.'); return null; }
 
-	static async createInstance(audioContext, initialState) { throw new Error('Not Implemented.'); return null; }
+	static async createInstance(groupId, audioContext, initialState) { throw new Error('Not Implemented.'); return null; }
 
-	constructor(audioContext) {}
+	constructor(groupId, audioContext) {}
 
 	get isWebAudioModule() { throw new Error('Not Implemented.'); return null; }
 
@@ -26,6 +26,8 @@ export default class WebAudioModule {
 	get initialized() { throw new Error('Not Implemented.'); return null; }
 	set initialized(initialized) { throw new Error('Not Implemented.'); }
 
+	get groupId() { throw new Error('Not Implemented.'); return null; }
+	
 	get moduleId() { throw new Error('Not Implemented.'); return null; }
 
 	get instanceId() { throw new Error('Not Implemented.'); return null; }

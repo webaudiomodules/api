@@ -13,6 +13,8 @@ export interface WebAudioModule<Node extends WamNode = WamNode> {
     audioNode: Node;
     /** This will return true after calling `initialize()`. */
     initialized: boolean;
+    /** The identifier of the current WAM's group. */
+    readonly groupId: string;
     /** The identifier of the current WAM, composed of vender + name */
     readonly moduleId: string;
     /** The unique identifier of the current WAM instance. */
@@ -46,16 +48,16 @@ export interface WebAudioModule<Node extends WamNode = WamNode> {
     /** Redefine this method to get the WAM's GUI as an HTML `Element`. */
     createGui(): Promise<Element>;
     /** Clean up an element previously returned by `createGui` */
-    destroyGui(gui: Element): void
+    destroyGui(gui: Element): void;
 }
 export const WebAudioModule: {
     prototype: WebAudioModule;
     /** should return `true` */
     isWebAudioModuleConstructor: boolean;
     /** shorthand for `new` then `initialize`. */
-    createInstance<Node extends WamNode = WamNode>(audioContext: BaseAudioContext, initialState?: any): Promise<WebAudioModule<Node>>;
+    createInstance<Node extends WamNode = WamNode>(groupId: string, audioContext: BaseAudioContext, initialState?: any): Promise<WebAudioModule<Node>>;
     /** WAM constructor, should call `initialize` after constructor to get it work */
-    new <Node extends WamNode = WamNode>(audioContext: BaseAudioContext): WebAudioModule<Node>;
+    new <Node extends WamNode = WamNode>(groupId: string, audioContext: BaseAudioContext): WebAudioModule<Node>;
 };
 
 export type WamIODescriptor = Record<`has${'Audio' | 'Midi' | 'Sysex' | 'Osc' | 'Mpe' | 'Automation'}${'Input' | 'Output'}`, boolean>;
@@ -75,14 +77,20 @@ export interface WamDescriptor extends WamIODescriptor {
 // Node
 
 export interface WamNodeOptions {
-    /** The identifier of the WAM `AudioWorkletProcessor`. */
-    processorId: string;
-    /** The unique identifier of the current WAM instance. */
+    /** The identifier of the current WAM instance's `WamGroup`. */
+    groupId: string;
+    /** The identifier of the WAM's `AudioWorkletProcessor`. */
+    moduleId: string;
+    /** The identifier of the current WAM instance. */
     instanceId: string;
 }
-export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
+export interface WamNode extends AudioNode {
     /** Current `WebAudioModule`. */
     readonly module: WebAudioModule;
+
+    readonly groupId: string;
+    readonly moduleId: string;
+    readonly instanceId: string;
 
     /** Get parameter info for the specified parameter ids, or omit argument to get info for all parameters. */
     getParameterInfo(...parameterIdQuery: string[]): Promise<WamParameterInfoMap>;
@@ -97,21 +105,21 @@ export interface WamNode extends AudioNode, Readonly<WamNodeOptions> {
     /** Compensation delay hint in samples */
     getCompensationDelay(): Promise<number>;
     /** Register a callback function so it will be called when matching events are processed. */
-    addEventListener<K extends keyof WamEventMap>(type: K, listener: (this: this, ev: CustomEvent<WamEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: (this: this, ev: CustomEvent) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener<K extends keyof WamEventMap>(type: K, listener: (this: this | AudioWorkletNode, ev: CustomEvent<WamEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+    addEventListener(type: string, listener: (this: this | AudioWorkletNode, ev: CustomEvent) => any, options?: boolean | AddEventListenerOptions): void;
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
     /** Deregister a callback function so it will no longer be called when matching events are processed. */
-    removeEventListener<K extends keyof WamEventMap>(type: K, listener: (this: this, ev: CustomEvent<WamEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: (this: this, ev: CustomEvent) => any, options?: boolean | AddEventListenerOptions): void;
+    removeEventListener<K extends keyof WamEventMap>(type: K, listener: (this: this | AudioWorkletNode, ev: CustomEvent<WamEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+    removeEventListener(type: string, listener: (this: this | AudioWorkletNode, ev: CustomEvent) => any, options?: boolean | AddEventListenerOptions): void;
     removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     /** Schedule a WamEvent. Listeners will be triggered when the event is processed. */
     scheduleEvents(...event: WamEvent[]): void;
     /** Clear all pending WamEvents. */
     clearEvents(): void;
     /** Connect an event output stream to another WAM. If no output index is given, assume output 0. */
-    connectEvents(to: WamNode, output?: number): void;
+    connectEvents(toId: string, output?: number): void;
     /** Disconnect an event output stream from another WAM. If no arguments are given, all event streams will be disconnected. */
-    disconnectEvents(to?: WamNode, output?: number): void;
+    disconnectEvents(toId?: string, output?: number): void;
     /** Stop processing and remove the node from the graph. */
     destroy(): void;
 }
@@ -120,8 +128,10 @@ export const WamNode: {
     new (module: WebAudioModule, options?: AudioWorkletNodeOptions): WamNode;
 };
 export interface WamProcessor extends AudioWorkletProcessor {
+    readonly groupId: string;
     readonly moduleId: string;
     readonly instanceId: string;
+
     /** Compensation delay hint in seconds. */
     getCompensationDelay(): number;
     /** Schedule a WamEvent. Listeners will be triggered when the event is processed. */
@@ -277,22 +287,53 @@ export const AudioWorkletProcessor: {
     new (options: AudioWorkletNodeOptions): AudioWorkletProcessor;
 };
 
+export interface WamGroup {
+    /** The group's unique identifier. */
+    readonly groupId: string;
+
+    /** Used to control access to the group instance via `WamEnv`. */
+    validate(groupKey: string): boolean;
+    /** Add the WAM to the group. */
+    addWam(wam: WamProcessor): void;
+    /** Remove the WAM from the group. */
+    removeWam(wam: WamProcessor): void;
+    /** Connect events between `WamProcessor`s, the output number is 0 by default. 'from' and 'to' must both be members of this group. */
+    connectEvents(fromId: string, toId: string, output?: number): void;
+    /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `toId` is omitted, will disconnect every connections. 'from' and 'to' must both be members of this group. */
+    disconnectEvents(fromId: string, toId?: string, output?: number): void;
+    /** Pass events from `WamProcessor` to other `WamProcessor`s connected downstream within this group. */
+    emitEvents(from: WamProcessor, ...events: WamEvent[]): void;
+}
+
+export const WamGroup: {
+    prototype: WamGroup;
+    new (groupId: string, groupKey: string): WamGroup;
+}
+
 export interface WamEnv {
     /** The version of the API used */
     readonly apiVersion: string;
-    /** Stores a graph of WamProcessors connected with `connectEvents` for each output of processors */
-    readonly eventGraph: Map<WamProcessor, Set<WamProcessor>[]>;
-    /** processors map with `instanceId` */
-    readonly processors: Record<string, WamProcessor>;
+
+    /** Return the WAM's 'global scope' including any dependencies. */
+    getModuleScope(moduleId: string): Record<string, any>;
+    /** Return specified WamGroup */
+    getGroup(groupId: string, groupKey: string): WamGroup;
+    /** The method should be called when a group is created */
+    addGroup(group: WamGroup): void;
+    /** The method should be called before a group is destroyed */
+    removeGroup(group: WamGroup): void;
     /** The method should be called when a processor instance is created */
-    create(wam: WamProcessor): void;
+    addWam(wam: WamProcessor): void;
+    /** The method should be called before a processor instance is destroyed */
+    removeWam(wam: WamProcessor): void;
     /** Connect events between `WamProcessor`s, the output number is 0 by default */
-    connectEvents(from: WamProcessor, to: WamProcessor, output?: number): void;
-    /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `to` is omitted, will disconnect every connections */
-    disconnectEvents(from: WamProcessor, to?: WamProcessor, output?: number): void;
-    /** The method should be called when a processor instance is destroyed */
-    destroy(wam: WamProcessor): void;
+    connectEvents(groupId: string, fromId: string, toId: string, output?: number): void;
+    /** Disonnect events between `WamProcessor`s, the output number is 0 by default, if `toId` is omitted, will disconnect every connections */
+    disconnectEvents(groupId: string, fromId: string, toId?: string, output?: number): void;
+    /** Pass events from `WamProcessor` to other `WamProcessor`s connected downstream*/
+    emitEvents(from: WamProcessor, ...events: WamEvent[]): any;
 }
+
 export const WamEnv: {
     prototype: WamEnv;
     new (): WamEnv;

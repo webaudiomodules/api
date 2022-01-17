@@ -11,7 +11,9 @@ export default class WamNode extends AudioWorkletNode {
 		super(module.audioContext, module.moduleId, options);
 	}
 
-	get processorId() { throw new Error('Not Implemented.'); return null; }
+	get groupId() { throw new Error('Not Implemented.'); return null; }
+
+	get moduleId() { throw new Error('Not Implemented.'); return null; }
 
 	get instanceId() { throw new Error('Not Implemented.'); return null; }
 
@@ -32,9 +34,9 @@ export default class WamNode extends AudioWorkletNode {
 
 	async clearEvents() { throw new Error('Not Implemented.'); }
 
-	connectEvents(to, output) { throw new Error('Not Implemented.'); }
+	connectEvents(toId, output) { throw new Error('Not Implemented.'); }
 
-	disconnectEvents(to, output) { throw new Error('Not Implemented.'); }
+	disconnectEvents(toId, output) { throw new Error('Not Implemented.'); }
 
 	destroy() { throw new Error('Not Implemented.'); }
 }
