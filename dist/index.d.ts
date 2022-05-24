@@ -261,7 +261,7 @@ export interface AudioWorkletProcessor {
 export const AudioWorkletProcessor: {
 	prototype: AudioWorkletProcessor;
 	parameterDescriptors: AudioParamDescriptor[];
-	new (options: AudioWorkletNodeOptions): AudioWorkletProcessor;
+	new (): AudioWorkletProcessor;
 };
 export interface WamGroup {
 	/** The group's unique identifier. */
@@ -312,7 +312,7 @@ export const WamEnv: {
 export interface AudioWorkletGlobalScope {
 	AudioWorkletGlobalScope: any;
 	globalThis: AudioWorkletGlobalScope;
-	registerProcessor: (name: string, constructor: new (options: any) => AudioWorkletProcessor) => void;
+	registerProcessor: (name: string, constructor: new (options?: any) => AudioWorkletProcessor) => void;
 	currentFrame: number;
 	currentTime: number;
 	sampleRate: number;
