@@ -63,6 +63,7 @@ export const WebAudioModule: {
 export type WamIODescriptor = Record<`has${'Audio' | 'Midi' | 'Sysex' | 'Osc' | 'Mpe' | 'Automation'}${'Input' | 'Output'}`, boolean>;
 
 export interface WamDescriptor extends WamIODescriptor {
+    identifier: string;
     name: string;
     vendor: string;
     version: string;
