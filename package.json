@@ -1,6 +1,6 @@
 {
   "name": "@webaudiomodules/api",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "description": "WebAudioModules Plugin API",
   "type": "module",
   "main": "dist/index.js",
