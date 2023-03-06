@@ -35,6 +35,8 @@ export default class WebAudioModule {
 
 	get descriptor() { throw new Error('Not Implemented.'); return null; }
 
+	get identifier() { throw new Error('Not Implemented.'); return null; }
+
 	get name() { throw new Error('Not Implemented.'); return null; }
 
 	get vendor() { throw new Error('Not Implemented.'); return null; }

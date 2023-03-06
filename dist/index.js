@@ -317,6 +317,10 @@ var WebAudioModule = class {
     throw new Error("Not Implemented.");
     return null;
   }
+  get identifier() {
+    throw new Error("Not Implemented.");
+    return null;
+  }
   get name() {
     throw new Error("Not Implemented.");
     return null;
@@ -343,7 +347,7 @@ var WebAudioModule = class {
 };
 
 // src/version.js
-var version_default = "2.0.0-alpha.3";
+var version_default = "2.0.0-alpha.5";
 export {
   WamNode as AbstractWamNode,
   WamParameter as AbstractWamParameter,
